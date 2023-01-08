@@ -109,11 +109,11 @@ public class TokenService : ITokenService
         }
     }
 
-    public async Task<string?> GetTokenAsync(LoginUserDTO loginUserDto)
+    public async Task<string?> GetTokenAsync(LoginUserDTO loginUserDto, VODUser? user)
     {
         try
         {
-            var user = await _userService.GetUserAsync(loginUserDto);
+            //var user = await _userService.GetUserAsync(loginUserDto);
 
             if (user is null) throw new UnauthorizedAccessException();
 

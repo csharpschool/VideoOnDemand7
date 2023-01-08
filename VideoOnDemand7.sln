@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VOD.Token.Common", "VOD.Token.Common\VOD.Token.Common.csproj", "{1EB536CD-EBB3-46D7-9CBA-7D517A7809C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VOD.Token.Common", "VOD.Token.Common\VOD.Token.Common.csproj", "{1EB536CD-EBB3-46D7-9CBA-7D517A7809C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VOD.Token.API", "VOD.Token.API\VOD.Token.API.csproj", "{24FDE4F5-289A-4273-855D-6A25A975F8C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VOD.Token.API", "VOD.Token.API\VOD.Token.API.csproj", "{24FDE4F5-289A-4273-855D-6A25A975F8C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VOD.User.Database", "VOD.User.Database\VOD.User.Database.csproj", "{6B81EBB4-9357-4639-83CF-E9A5AB273BAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VOD.User.Database", "VOD.User.Database\VOD.User.Database.csproj", "{6B81EBB4-9357-4639-83CF-E9A5AB273BAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VOD.Users.API", "VOD.Users.API\VOD.Users.API.csproj", "{27F47471-C034-446C-A7C0-DC5166EB5687}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VOD.Users.API", "VOD.Users.API\VOD.Users.API.csproj", "{27F47471-C034-446C-A7C0-DC5166EB5687}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VOD.UI", "VOD.UI\VOD.UI.csproj", "{2A5BEC08-8410-4464-B975-E8FACB2FEB41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VOD.UI", "VOD.UI\VOD.UI.csproj", "{2A5BEC08-8410-4464-B975-E8FACB2FEB41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

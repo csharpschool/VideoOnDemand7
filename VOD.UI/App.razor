@@ -1,7 +1,8 @@
 ﻿<Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" >
-            <Authorizing>Please wait, we're authorizing you.</Authorizing>
+            <NotAuthorized><text>Sorry. You're not authorized.</text></NotAuthorized>
+            <Authorizing><text>Please wait, we're authorizing you.</text></Authorizing>
         </AuthorizeRouteView>
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
     </Found>

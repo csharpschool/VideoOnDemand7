@@ -1,0 +1,48 @@
+﻿@page "/login"
+@inject IAuthenticationService AuthService
+@inject NavigationManager NavManager
+
+<h3>Log In</h3>
+
+@if(!string.IsNullOrEmpty(authError))
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@authError</p>
+    </div>
+}
+
+<EditForm Model="model" OnValidSubmit="Login" class="card card-body bg-light mt-5 p-4">
+    <DataAnnotationsValidator/>
+    @*<ValidationSummary />*@
+
+    <div class="form-group row px-2">
+        <InputText id="email" class="form-control" @bind-Value="model.Email" placeholder="Email"></InputText>
+        <ValidationMessage For="@(() => model.Email)"></ValidationMessage>
+    </div>
+
+    <div class="form-group row mt-3 px-2">
+        <InputText id="password" type="password" class="form-control" @bind-Value="model.Password" placeholder="Password"></InputText>
+        <ValidationMessage For="@(() => model.Password)"></ValidationMessage>
+    </div>
+
+    <div class="row mt-3 px-2">
+        <button type="submit" class="btn btn-success">Login</button>
+    </div>
+</EditForm>
+
+@code {
+    private AuthenticationUserModel model = new();
+    string authError = string.Empty;
+
+    private async Task Login()
+    {
+        authError = string.Empty;
+
+        var result = await AuthService.Login(model);
+
+        if (result is null)
+            authError = "Error logging in.";
+        else
+            NavManager.NavigateTo("/");
+    }
+}

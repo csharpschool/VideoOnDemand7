@@ -1,4 +1,8 @@
-﻿namespace VOD.UI.Authentication
+﻿using System.Net.Http;
+using System.Text;
+using VOD.Token.Common.DTOs;
+
+namespace VOD.UI.Authentication
 {
     public class AuthenticationService : IAuthenticationService
     {
@@ -13,31 +17,49 @@
             _localStorage = localStorage;
         }
 
-        public async Task<AuthenticatedUserModel> Login(AuthenticationUserModel userForAuthentication)
+        public async Task<AuthenticatedUserDTO?> Login(AuthenticationUserModel userForAuthentication)
         {
-            var data = new FormUrlEncodedContent(new[]
+            try
             {
-                new KeyValuePair<string, string>("grant_type", "password"),
-                new KeyValuePair<string, string>("username", userForAuthentication.Email),
-                new KeyValuePair<string, string>("password", userForAuthentication.Password)
-            });
 
-            var authResult = await _httpClient.PostAsync("https://localhost:5001/token", data);
-            var authContent = await authResult.Content.ReadAsStringAsync();
+                var data = new LoginUserDTO(userForAuthentication.Email, userForAuthentication.Password);
+                using StringContent jsonContent = new(
+                    JsonSerializer.Serialize(data),
+                    Encoding.UTF8,
+                    "application/json");
 
-            if (!authResult.IsSuccessStatusCode) return default;
+                using HttpResponseMessage response = await _httpClient.PostAsync("token", jsonContent);
 
-            var result = JsonSerializer.Deserialize<AuthenticatedUserModel>(authContent,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                response.EnsureSuccessStatusCode();
+                var responseContent = await response.Content.ReadAsStringAsync();
 
-            await _localStorage.SetItemAsync("authToken", result.AccessToken);
+                var result = JsonSerializer.Deserialize<AuthenticatedUserDTO>(responseContent,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(result.AccessToken);
+                if (result is null) return default;
 
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", result.AccessToken);
+                /*var authResult = await _httpClient.PostAsync("token", jsonContent);
+                var authContent = await authResult.Content.ReadAsStringAsync();
 
-            return result;
+                if (!authResult.IsSuccessStatusCode) return default;
+
+                var result = JsonSerializer.Deserialize<AuthenticatedUserModel>(authContent,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });*/
+
+                await _localStorage.SetItemAsync("authToken", result.AccessToken);
+
+                ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(result.AccessToken);
+
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", result.AccessToken);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return default;
+            }
         }
+
         public async Task Logout()
         {
             await _localStorage.RemoveItemAsync("authToken");

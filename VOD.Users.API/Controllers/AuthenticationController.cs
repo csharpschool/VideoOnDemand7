@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+/*using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using VOD.Token.API.Services;
@@ -47,4 +47,4 @@ namespace VOD.Users.API.Controllers
             return Results.Unauthorized();
         }
     }
-}
+}*/

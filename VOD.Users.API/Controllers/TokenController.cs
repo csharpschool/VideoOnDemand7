@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using VOD.Token.API.Services;
+using VOD.Token.Common.DTOs;
+using VOD.UI.Models;
 
 namespace VOD.Users.API.Controllers
 {
@@ -11,30 +13,36 @@ namespace VOD.Users.API.Controllers
     {
         private readonly ITokenService _tokenService;
         private readonly ILogger<TokenController> _logger;
+        private readonly IUserService _userService;
         private readonly UserManager<VODUser> _userManager;
         private readonly SignInManager<VODUser> _signInManager;
         
 
-        public TokenController(ITokenService service, ILogger<TokenController> logger, UserManager<VODUser> userManager, SignInManager<VODUser> signInManager)
+        public TokenController(ITokenService service, ILogger<TokenController> logger, IUserService userService, UserManager<VODUser> userManager, SignInManager<VODUser> signInManager)
         {
             _tokenService = service;
             _logger = logger;
+            _userService = userService;
             _userManager = userManager;
             _signInManager = signInManager;
         }
 
-        [HttpGet(Name = "GetToken")]
-        public async Task<IResult> Get([FromQuery]LoginUserDTO loginUser)
+        [HttpPost]
+        public async Task<IResult> GetToken([FromBody]LoginUserDTO loginUser)
         {
             try
             {
                 if (loginUser is null) return Results.Unauthorized();
 
-                var jwt = await _tokenService.GetTokenAsync(loginUser);
+                var user = await _userService.GetUserAsync(loginUser);
+
+                if (user is null) return Results.Unauthorized();
+
+                var jwt = await _tokenService.GetTokenAsync(loginUser, user);
 
                 if (string.IsNullOrWhiteSpace(jwt)) return Results.Unauthorized();
 
-                return Results.Ok(jwt);
+                return Results.Ok(new AuthenticatedUserDTO(jwt, user.UserName));
             }
             catch
             {
@@ -43,7 +51,7 @@ namespace VOD.Users.API.Controllers
             return Results.Unauthorized();
         }
 
-        [HttpPost(Name = "CreateToken")]
+        /*[HttpPost(Name = "CreateToken")]
         public async Task<IResult> GenerateTokenAsync(LoginUserDTO loginUserDto)
         {
             try
@@ -56,7 +64,7 @@ namespace VOD.Users.API.Controllers
             {
                 return Results.Unauthorized();
             }
-        }
+        }*/
 
         /*[Route("Login")]
         [HttpPost(Name = "Login")]
