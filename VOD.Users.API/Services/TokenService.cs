@@ -28,49 +28,40 @@ public class TokenService : ITokenService
     #endregion
 
     #region Helper Methods
-    /*private async Task<List<Claim>> AddClaims(VODUser user)
-    {
-        var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
-
-        var userClaims = await _userManager.GetClaimsAsync(user);
-
-        foreach (var claim in claims)
-        {
-            if(!userClaims.Contains(claim))
-                await _userManager.AddClaimAsync(user, claim);
-        }
-        
-        return claims;
-    }*/
-
-    private string? CreateToken(IList<Claim> claims)
+    private string? CreateToken(IList<string>? roles, VODUser user)
     {
         try
         {
-            if(_configuration["Jwt:SigningSecret"] is null || 
-               _configuration["Jwt:Duration"] is null || 
-               _configuration["Jwt:Issuer"] is null || 
-               _configuration["Jwt:Audience"] is null)
+            if (_configuration["Jwt:SigningSecret"] is null ||
+               _configuration["Jwt:Duration"] is null ||
+               _configuration["Jwt:Issuer"] is null ||
+               _configuration["Jwt:Audience"] is null ||
+               roles is null || user is null)
                 throw new ArgumentException("JWT configuration missing.");
 
             var signingKey = Convert.FromBase64String(_configuration["Jwt:SigningSecret"]);
             var credentials = new SigningCredentials(new SymmetricSecurityKey(signingKey), SecurityAlgorithms.HmacSha256Signature);
             var duration = int.Parse(_configuration["Jwt:Duration"]);
-            var now = DateTime.UtcNow;
+            var now = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString();
+            var expires = new DateTimeOffset(DateTime.UtcNow.AddDays(duration)).ToUnixTimeSeconds().ToString();
 
-            var jwtToken = new JwtSecurityToken
-            (
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                notBefore: now,
-                expires: now.AddDays(duration),
-                claims: claims,
-                signingCredentials: credentials
+            //Claim Types: https://datatracker.ietf.org/doc/html/rfc7519#section-4
+            List<Claim> claims = new() {
+                new Claim(JwtRegisteredClaimNames.Iss, _configuration["Jwt:Issuer"] ?? string.Empty),
+                new Claim(JwtRegisteredClaimNames.Aud, _configuration["Jwt:Audience"] ?? string.Empty),
+                new Claim(JwtRegisteredClaimNames.Nbf, now),
+                new Claim(JwtRegisteredClaimNames.Exp, expires),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Email ?? string.Empty),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
+                new Claim(JwtRegisteredClaimNames.Jti, user.Id)
+            };
+
+            foreach (var role in roles)
+                claims.Add(new Claim(ClaimTypes.Role, role));
+
+            var jwtToken = new JwtSecurityToken(
+                new JwtHeader(credentials),
+                new JwtPayload(claims)
             );
 
             var jwtTokenHandler = new JwtSecurityTokenHandler();
@@ -93,8 +84,8 @@ public class TokenService : ITokenService
 
             if (user is null) throw new UnauthorizedAccessException();
 
-            var claims = await _userManager.GetClaimsAsync(user);
-            var token = CreateToken(claims);
+            var roles = await _userManager.GetRolesAsync(user);
+            var token = CreateToken(roles, user);
 
             var result = await _userManager.SetAuthenticationTokenAsync(user, "VOD", "UserToken", token);
 
@@ -113,8 +104,6 @@ public class TokenService : ITokenService
     {
         try
         {
-            //var user = await _userService.GetUserAsync(loginUserDto);
-
             if (user is null) throw new UnauthorizedAccessException();
 
             var token = await _userManager.GetAuthenticationTokenAsync(user, "VOD", "UserToken");
@@ -127,28 +116,4 @@ public class TokenService : ITokenService
         }
     }
     #endregion
-
-    /*public async Task<IResult> Login([FromBody] LoginUserDTO loginUser)
-    {
-        var user = await _userManager.FindByEmailAsync(request.Email);
-        if (user != null)
-        {
-            var signIn = await this._signInManager.CheckPasswordSignInAsync(user, request.Password, false);
-            if (signIn.Succeeded)
-            {
-                string jwt = CreateJWT(user);
-                AppendRefreshTokenCookie(user, HttpContext.Response.Cookies);
-
-                return new LoginResponse(true, jwt);
-            }
-            else
-            {
-                return LoginResponse.Failed;
-            }
-        }
-        else
-        {
-            return LoginResponse.Failed;
-        }
-    }*/
 }

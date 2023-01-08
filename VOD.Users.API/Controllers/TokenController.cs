@@ -8,27 +8,22 @@ using VOD.UI.Models;
 namespace VOD.Users.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("token/[Action]")]
     public class TokenController : ControllerBase
     {
         private readonly ITokenService _tokenService;
-        private readonly ILogger<TokenController> _logger;
         private readonly IUserService _userService;
-        private readonly UserManager<VODUser> _userManager;
-        private readonly SignInManager<VODUser> _signInManager;
-        
+        private readonly ILogger<TokenController> _logger;
 
-        public TokenController(ITokenService service, ILogger<TokenController> logger, IUserService userService, UserManager<VODUser> userManager, SignInManager<VODUser> signInManager)
+        public TokenController(ITokenService service, IUserService userService, ILogger<TokenController> logger)
         {
             _tokenService = service;
-            _logger = logger;
             _userService = userService;
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _logger = logger;
         }
 
         [HttpPost]
-        public async Task<IResult> GetToken([FromBody]LoginUserDTO loginUser)
+        public async Task<IResult> Get([FromBody]LoginUserDTO loginUser)
         {
             try
             {
@@ -51,45 +46,19 @@ namespace VOD.Users.API.Controllers
             return Results.Unauthorized();
         }
 
-        /*[HttpPost(Name = "CreateToken")]
-        public async Task<IResult> GenerateTokenAsync(LoginUserDTO loginUserDto)
+        [HttpPost]
+        public async Task<IResult> Create(LoginUserDTO loginUserDto)
         {
             try
             {
                 var jwt = await _tokenService.GenerateTokenAsync(loginUserDto);
                 if (jwt == null) return Results.Unauthorized();
-                return Results.Created("", jwt);
+                return Results.Created("token/get", jwt); 
             }
             catch
             {
                 return Results.Unauthorized();
             }
-        }*/
-
-        /*[Route("Login")]
-        [HttpPost(Name = "Login")]
-        public async Task<IResult> Login([FromBody] LoginUserDTO loginUser)
-        {
-
-            try
-            {
-                var user = await _userManager.FindByEmailAsync(loginUser.Email);
-                if (user != null)
-                {
-                    var signIn = await _signInManager.CheckPasswordSignInAsync(user, loginUser.Password, false);
-                    if (!signIn.Succeeded) return Results.Unauthorized();
-
-                    var jwt = await _tokenService.GetTokenAsync(loginUser);
-                    //AppendRefreshTokenCookie(user, HttpContext.Response.Cookies);
-
-                    return Results.Ok(jwt);
-                }
-            }
-            catch
-            {
-            }
-
-            return Results.Unauthorized();
-        }*/
+        }
     }
 }

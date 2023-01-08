@@ -44,9 +44,6 @@ void RegisterServices(WebApplicationBuilder builder)
             options.UseSqlServer(
                 builder.Configuration.GetConnectionString("VODUserConnection")));
 
-    /*builder.Services.AddDefaultIdentity<VODUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<VODUserContext>();*/
-
     builder.Services.AddIdentity<VODUser, IdentityRole>()
             .AddEntityFrameworkStores<VODUserContext>()
             .AddDefaultTokenProviders();

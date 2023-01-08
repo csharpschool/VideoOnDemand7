@@ -28,7 +28,7 @@ namespace VOD.UI.Authentication
                     Encoding.UTF8,
                     "application/json");
 
-                using HttpResponseMessage response = await _httpClient.PostAsync("token", jsonContent);
+                using HttpResponseMessage response = await _httpClient.PostAsync("token/get", jsonContent);
 
                 response.EnsureSuccessStatusCode();
                 var responseContent = await response.Content.ReadAsStringAsync();
@@ -37,14 +37,6 @@ namespace VOD.UI.Authentication
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                 if (result is null) return default;
-
-                /*var authResult = await _httpClient.PostAsync("token", jsonContent);
-                var authContent = await authResult.Content.ReadAsStringAsync();
-
-                if (!authResult.IsSuccessStatusCode) return default;
-
-                var result = JsonSerializer.Deserialize<AuthenticatedUserModel>(authContent,
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });*/
 
                 await _localStorage.SetItemAsync("authToken", result.AccessToken);
 
