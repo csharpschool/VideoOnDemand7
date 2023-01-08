@@ -1,10 +1,5 @@
 using Microsoft.AspNetCore.Identity;
 using VOD.Token.API.Services;
-using VOD.User.Database.Entities;
-
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +16,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("CorsAllAccessPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -31,6 +26,14 @@ app.Run();
 
 void RegisterServices(WebApplicationBuilder builder)
 {
+    builder.Services.AddCors(policy => {
+        policy.AddPolicy("CorsAllAccessPolicy", opt =>
+            opt.AllowAnyOrigin()
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+        );
+    });
+
     builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();

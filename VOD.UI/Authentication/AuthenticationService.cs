@@ -1,6 +1,6 @@
 ﻿namespace VOD.UI.Authentication
 {
-    public class AuthenticationService
+    public class AuthenticationService : IAuthenticationService
     {
         private readonly HttpClient _httpClient;
         private readonly AuthenticationStateProvider _authStateProvider;
@@ -15,8 +15,8 @@
 
         public async Task<AuthenticatedUserModel> Login(AuthenticationUserModel userForAuthentication)
         {
-            var data = new FormUrlEncodedContent(new[] 
-            { 
+            var data = new FormUrlEncodedContent(new[]
+            {
                 new KeyValuePair<string, string>("grant_type", "password"),
                 new KeyValuePair<string, string>("username", userForAuthentication.Email),
                 new KeyValuePair<string, string>("password", userForAuthentication.Password)
@@ -26,7 +26,7 @@
             var authContent = await authResult.Content.ReadAsStringAsync();
 
             if (!authResult.IsSuccessStatusCode) return default;
-            
+
             var result = JsonSerializer.Deserialize<AuthenticatedUserModel>(authContent,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
