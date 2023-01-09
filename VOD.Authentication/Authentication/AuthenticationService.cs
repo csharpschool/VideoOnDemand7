@@ -1,14 +1,16 @@
-﻿namespace VOD.Authentication;
+﻿using VOD.Authentication.HttpClients;
+
+namespace VOD.Authentication;
 
 public class AuthenticationService : IAuthenticationService
 {
-    private readonly HttpClient _httpClient;
+    private readonly AuthenticationHttpClient _http;
     private readonly AuthenticationStateProvider _authStateProvider;
     private readonly ILocalStorageService _localStorage;
 
-    public AuthenticationService(HttpClient httpClient, AuthenticationStateProvider authStateProvider, ILocalStorageService localStorage)
+    public AuthenticationService(AuthenticationHttpClient httpClient, AuthenticationStateProvider authStateProvider, ILocalStorageService localStorage)
     {
-        _httpClient = httpClient;
+        _http = httpClient;
         _authStateProvider = authStateProvider;
         _localStorage = localStorage;
     }
@@ -24,7 +26,7 @@ public class AuthenticationService : IAuthenticationService
                 Encoding.UTF8,
                 "application/json");
 
-            using HttpResponseMessage response = await _httpClient.PostAsync("token", jsonContent);
+            using HttpResponseMessage response = await _http.Client.PostAsync("token", jsonContent);
 
             response.EnsureSuccessStatusCode();
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -38,7 +40,7 @@ public class AuthenticationService : IAuthenticationService
 
             ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(result.AccessToken);
 
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", result.AccessToken);
+            _http.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", result.AccessToken);
 
             return result;
         }
@@ -52,6 +54,6 @@ public class AuthenticationService : IAuthenticationService
     {
         await _localStorage.RemoveItemAsync("authToken");
         ((AuthStateProvider)_authStateProvider).NotifyUserLogout();
-        _httpClient.DefaultRequestHeaders.Authorization = null;
+        _http.Client.DefaultRequestHeaders.Authorization = null;
     }
 }

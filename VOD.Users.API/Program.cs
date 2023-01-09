@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Identity;
-using VOD.Token.API.Services;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -45,10 +42,10 @@ void RegisterServices(WebApplicationBuilder builder)
                 builder.Configuration.GetConnectionString("VODUserConnection")));
 
     builder.Services.AddIdentity<VODUser, IdentityRole>()
+            .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<VODUserContext>()
             .AddDefaultTokenProviders();
 
     builder.Services.AddScoped<IUserService, UserService>();
-    builder.Services.AddScoped<ITokenService, TokenService>();
 
 }

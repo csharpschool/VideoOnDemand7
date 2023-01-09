@@ -20,5 +20,8 @@
   <ItemGroup>
     <ProjectReference Include="..\VOD.User.Database\VOD.User.Database.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
 
 </Project>

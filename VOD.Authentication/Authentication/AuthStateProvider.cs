@@ -1,14 +1,16 @@
-﻿namespace VOD.Authentication;
+﻿using VOD.Authentication.HttpClients;
+
+namespace VOD.Authentication;
 
 public class AuthStateProvider : AuthenticationStateProvider
 {
-    private readonly HttpClient _httpClient;
+    private readonly AuthenticationHttpClient _http;
     private readonly ILocalStorageService _localStorage;
     private readonly AuthenticationState _anonymous;
 
-    public AuthStateProvider(HttpClient httpClient, ILocalStorageService localStorage)
+    public AuthStateProvider(AuthenticationHttpClient httpClient, ILocalStorageService localStorage)
     {
-        _httpClient = httpClient;
+        _http = httpClient;
         _localStorage = localStorage;
         _anonymous = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
     }
@@ -19,7 +21,7 @@ public class AuthStateProvider : AuthenticationStateProvider
 
         if (string.IsNullOrWhiteSpace(token)) return _anonymous;
 
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+        _http.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
         return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(JwtParser.ParseClaimsFromJWT(token), "jwtAuthType")));
     }
 
