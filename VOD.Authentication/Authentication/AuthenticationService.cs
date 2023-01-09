@@ -19,17 +19,29 @@ public class AuthenticationService : IAuthenticationService
     {
         try
         {
+            string? accessToken;
 
-            var data = new LoginUserDTO(userForAuthentication.Email, userForAuthentication.Password);
+            var user = new LoginUserDTO(userForAuthentication.Email, userForAuthentication.Password);
             using StringContent jsonContent = new(
-                JsonSerializer.Serialize(data),
+                JsonSerializer.Serialize(user),
                 Encoding.UTF8,
                 "application/json");
 
             using HttpResponseMessage response = await _http.Client.PostAsync("token", jsonContent);
 
-            response.EnsureSuccessStatusCode();
-            var responseContent = await response.Content.ReadAsStringAsync();
+            //response.EnsureSuccessStatusCode();
+            string responseContent = await response.Content.ReadAsStringAsync();
+
+            if (response.StatusCode.Equals(HttpStatusCode.Unauthorized) || string.IsNullOrWhiteSpace(responseContent))
+            {
+                using HttpResponseMessage createResponse = await _http.Client.PostAsync("token/create", jsonContent);
+
+                createResponse.EnsureSuccessStatusCode();
+
+                using HttpResponseMessage fetchResponse = await _http.Client.PostAsync("token", jsonContent);
+                fetchResponse.EnsureSuccessStatusCode();
+                responseContent = await fetchResponse.Content.ReadAsStringAsync();
+            }
 
             var result = JsonSerializer.Deserialize<AuthenticatedUserDTO>(responseContent,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });

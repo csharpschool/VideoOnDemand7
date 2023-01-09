@@ -7,3 +7,4 @@ global using System.Text.Json;
 global using Blazored.LocalStorage;
 global using VOD.Authentication.Models;
 global using VOD.Authentication.DTOs;
+global using System.Net;

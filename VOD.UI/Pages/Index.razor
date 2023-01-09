@@ -12,6 +12,6 @@
         Welcome to your new app.
     </Authorized>
     <NotAuthorized>
-        <h4>You are not authorized.</h4>
+        <h4>@context.User.FindFirst("sub")?.Value you are not authorized. Missing the Admin role needed to view the whole page.</h4>
     </NotAuthorized>
 </AuthorizeView>

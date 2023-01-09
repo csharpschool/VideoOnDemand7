@@ -7,7 +7,7 @@
 
     <main>
         <div class="top-row px-4">
-            <AuthorizeView Roles="Admin">
+            <AuthorizeView Roles="@UserRoles.Registered">
                 <Authorized>
                     Welcome @context.User.FindFirst("sub")?.Value
                     <NavLink class="nav-link" href="logout">

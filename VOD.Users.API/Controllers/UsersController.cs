@@ -14,7 +14,7 @@ namespace VOD.Users.API.Controllers
 
         public UsersController(UserManager<VODUser> userManager) => _userManager = userManager;
 
-        [Route("user/register")]
+        [Route("users/register")]
         [HttpPost]
         public async Task<IResult> Register(RegisterUserDTO registerUserDto)
         {

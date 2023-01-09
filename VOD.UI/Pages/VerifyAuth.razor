@@ -5,6 +5,7 @@
 {
     <h4>@userName is authenticated</h4>
     <ul>
+        <li>Registered: @isRegistered</li>
         <li>Customer: @isCustomer</li>
         <li>Admin: @isAdmin</li>
     </ul>
@@ -20,6 +21,7 @@ else
     string? userName = string.Empty;
     bool isCustomer = false;
     bool isAdmin = false;
+    bool isRegistered = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -30,8 +32,9 @@ else
         if (isAuthenticated)
         {
             userName = authState.User.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty;
-            isCustomer = authState.User.IsInRole("Customer");
-            isAdmin = authState.User.IsInRole("Admin");
+            isRegistered = authState.User.IsInRole(UserRoles.Registered);
+            isCustomer = authState.User.IsInRole(UserRoles.Customer);
+            isAdmin = authState.User.IsInRole(UserRoles.Admin);
         }
     }
 }

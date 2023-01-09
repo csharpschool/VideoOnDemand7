@@ -17,8 +17,4 @@
     <ProjectReference Include="..\VOD.Authentication\VOD.Authentication.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
 </Project>

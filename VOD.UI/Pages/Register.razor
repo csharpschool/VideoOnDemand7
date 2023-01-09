@@ -1,0 +1,58 @@
+﻿@page "/register"
+@inject UserHttpClient http
+@inject IAuthenticationService AuthService
+@inject NavigationManager NavManager
+
+<h3>Create an Account</h3>
+
+@if(!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger">
+        <p>@errorMessage</p>
+    </div>
+}
+
+<EditForm Model="@model" OnValidSubmit="@CreateUser">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label for="email" class="form-label">Email address</label>
+        <InputText id="email" class="form-control me-2" @bind-Value="model.Email" placeholder="Email"></InputText>
+        <ValidationMessage For="@(() => model.Email)" />
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <InputText id="password" type="password" class="form-control me-2" @bind-Value="model.Password" placeholder="Password"></InputText>
+        <ValidationMessage For="@(() => model.Password)" />
+    </div>
+    <div class="mb-3">
+        <label for="confirm-password" class="form-label">Confirm Password</label>
+        <InputText id="confirm-password" type="password" class="form-control me-2" @bind-Value="model.ConfirmPassword" placeholder="Confirm Password"></InputText>
+        <ValidationMessage For="@(() => model.ConfirmPassword)" />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+@code {
+    CreateUserModel model = new();
+    string errorMessage = string.Empty;
+
+    private async Task CreateUser()
+    {
+        errorMessage = string.Empty;
+        try
+        {
+            await http.CreateUser(model);
+            AuthenticatedUserDTO? result = await AuthService.Login(new AuthenticationUserModel { Email = model.Email, Password = model.Password });
+
+            if (result is not null)
+                NavManager.NavigateTo("/");
+            else
+                errorMessage = "Registration succeeded, but there was an error login in.";
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Failed to create user.";
+        }
+
+    }
+}

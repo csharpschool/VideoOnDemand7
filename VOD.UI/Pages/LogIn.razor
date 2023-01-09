@@ -5,7 +5,8 @@
     <div class="d-flex">
         <InputText id="email" class="form-control me-2" @bind-Value="model.Email" placeholder="Email"></InputText>
         <InputText id="password" type="password" class="form-control me-2" @bind-Value="model.Password" placeholder="Password"></InputText>
-        <button type="submit" class="btn btn-success">Login</button>
+        <button type="submit" class="btn btn-success me-2">Login</button>
+        <button type="submit" class="btn btn-primary" @onclick="RegisterUser">Register</button>
     </div>
 </EditForm>
 
@@ -15,13 +16,15 @@
 
     private async Task Login()
     {
-        //authError = string.Empty;
-
         var result = await AuthService.Login(model);
 
-        //if (result is null)
-        //    authError = "Error logging in.";
+        if (result is not null)
+            NavManager.NavigateTo("/");
         //else
-        //    NavManager.NavigateTo("/");
+            //errorMessage = "Registration succeeded, but there was an error login in.";
+    }
+    private void RegisterUser()
+    {
+        NavManager.NavigateTo("/register");
     }
 }
