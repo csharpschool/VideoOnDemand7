@@ -4,7 +4,7 @@ using VOD.Token.API.Services;
 namespace VOD.Users.API.Controllers
 {
     [ApiController]
-    [Route("token/[Action]")]
+    /*[Route("token/[Action]")]*/
     public class TokenController : ControllerBase
     {
         private readonly ITokenService _tokenService;
@@ -18,6 +18,7 @@ namespace VOD.Users.API.Controllers
             _logger = logger;
         }
 
+        [Route("token")]
         [HttpPost]
         public async Task<IResult> Get([FromBody]LoginUserDTO loginUser)
         {
@@ -42,6 +43,7 @@ namespace VOD.Users.API.Controllers
             return Results.Unauthorized();
         }
 
+        [Route("token/create")]
         [HttpPost]
         public async Task<IResult> Create(LoginUserDTO loginUserDto)
         {
@@ -49,7 +51,7 @@ namespace VOD.Users.API.Controllers
             {
                 var jwt = await _tokenService.GenerateTokenAsync(loginUserDto);
                 if (jwt == null) return Results.Unauthorized();
-                return Results.Created("token/get", jwt); 
+                return Results.Created("token", jwt); 
             }
             catch
             {

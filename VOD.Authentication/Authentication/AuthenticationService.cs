@@ -24,7 +24,7 @@ public class AuthenticationService : IAuthenticationService
                 Encoding.UTF8,
                 "application/json");
 
-            using HttpResponseMessage response = await _httpClient.PostAsync("token/get", jsonContent);
+            using HttpResponseMessage response = await _httpClient.PostAsync("token", jsonContent);
 
             response.EnsureSuccessStatusCode();
             var responseContent = await response.Content.ReadAsStringAsync();
