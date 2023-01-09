@@ -33,6 +33,6 @@ public class AuthStateProvider : AuthenticationStateProvider
     public void NotifyUserLogout()
     {
         var authState = Task.FromResult(_anonymous);
-
+        NotifyAuthenticationStateChanged(authState);
     }
 }
