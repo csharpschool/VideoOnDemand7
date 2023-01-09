@@ -18,7 +18,6 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VOD.Token.Common\VOD.Token.Common.csproj" />
     <ProjectReference Include="..\VOD.User.Database\VOD.User.Database.csproj" />
   </ItemGroup>
 

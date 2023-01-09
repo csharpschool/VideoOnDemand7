@@ -2,6 +2,6 @@
 
 public interface ITokenService
 {
-    //Task<TokenDTO> GenerateTokenAsync(LoginUserDTO loginUserDto);
-    //Task<TokenDTO> GetTokenAsync(LoginUserDTO loginUserDto, string userId);
+    Task<string?> GenerateTokenAsync(LoginUserDTO loginUserDto);
+    Task<string?> GetTokenAsync(LoginUserDTO loginUserDto, VODUser? user);
 }

@@ -1,5 +1,11 @@
-﻿global using Microsoft.EntityFrameworkCore;
-global using Microsoft.AspNetCore.Mvc;
+﻿global using Microsoft.AspNetCore.Mvc;
+global using VOD.Token.API.Services;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.AspNetCore.Identity;
+global using Microsoft.IdentityModel.Tokens;
+global using System.IdentityModel.Tokens.Jwt;
+global using System.Security.Claims;
 global using VOD.Authentication.DTOs;
 global using VOD.User.Database.Contexts;
+global using VOD.User.Database.Entities;
 global using VOD.User.Database.Services;

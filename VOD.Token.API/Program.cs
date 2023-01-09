@@ -1,5 +1,6 @@
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
 RegisterServices(builder);
 
 var app = builder.Build();
@@ -12,21 +13,25 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("CorsAllAccessPolicy");
+app.UseAuthentication();
+app.UseAuthorization();
 
-app.MapPost("/login", (IUserService service, [FromBody] LoginUserDTO user) =>
-{
-    //if (user is null) return Results.BadRequest();
-    var forecast = "";
-    return forecast;
-})
-.WithName("Login")
-.WithOpenApi();
+app.MapControllers();
 
 app.Run();
 
 void RegisterServices(WebApplicationBuilder builder)
 {
-    // Add services to the container.
+    builder.Services.AddCors(policy => {
+        policy.AddPolicy("CorsAllAccessPolicy", opt =>
+            opt.AllowAnyOrigin()
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+        );
+    });
+
+    builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
@@ -36,5 +41,11 @@ void RegisterServices(WebApplicationBuilder builder)
             options.UseSqlServer(
                 builder.Configuration.GetConnectionString("VODUserConnection")));
 
+    builder.Services.AddIdentity<VODUser, IdentityRole>()
+            .AddEntityFrameworkStores<VODUserContext>()
+            .AddDefaultTokenProviders();
+
     builder.Services.AddScoped<IUserService, UserService>();
+    builder.Services.AddScoped<ITokenService, TokenService>();
+
 }

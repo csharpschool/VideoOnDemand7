@@ -2,89 +2,87 @@
 
 public class TokenService : ITokenService
 {
-    /*#region Properties
+    #region Properties
     private readonly IConfiguration _configuration;
-    private readonly IUserService _users;
+    private readonly IUserService _userService;
+    private readonly UserManager<VODUser> _userManager;
+    private readonly SignInManager<VODUser> _signInManager;
     #endregion
 
     #region Constructors
-    public TokenService(IConfiguration configuration, IUserService userService)
+    public TokenService(IConfiguration configuration, IUserService userService, UserManager<VODUser> userManager, SignInManager<VODUser> signInManager)
     {
         _configuration = configuration;
-        _users = userService;
+        _userService = userService;
+        _userManager = userManager;
+        _signInManager = signInManager;
     }
     #endregion
 
     #region Helper Methods
-    private List<Claim> GetClaims(VODUser user, bool includeUserClaims)
-    {
-        var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
-
-        if (includeUserClaims)
-            foreach (var claim in user.Claims)
-                if (!claim.Type.Equals("Token") &&
-                    !claim.Type.Equals("TokenExpires")) claims.Add(claim);
-
-        return claims;
-    }
-    private TokenDTO CreateToken(IList<Claim> claims)
+    private string? CreateToken(IList<string>? roles, VODUser user)
     {
         try
         {
+            if (_configuration["Jwt:SigningSecret"] is null ||
+               _configuration["Jwt:Duration"] is null ||
+               _configuration["Jwt:Issuer"] is null ||
+               _configuration["Jwt:Audience"] is null ||
+               roles is null || user is null)
+                throw new ArgumentException("JWT configuration missing.");
+
             var signingKey = Convert.FromBase64String(_configuration["Jwt:SigningSecret"]);
             var credentials = new SigningCredentials(new SymmetricSecurityKey(signingKey), SecurityAlgorithms.HmacSha256Signature);
             var duration = int.Parse(_configuration["Jwt:Duration"]);
-            var now = DateTime.UtcNow;
+            var now = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString();
+            var expires = new DateTimeOffset(DateTime.UtcNow.AddDays(duration)).ToUnixTimeSeconds().ToString();
 
-            var jwtToken = new JwtSecurityToken
-            (
-                issuer: "http://your-domain.com",
-                audience: "http://audience-domain.com",
-                notBefore: now,
-                expires: now.AddDays(duration),
-                claims: claims,
-                signingCredentials: credentials
+            //Claim Types: https://datatracker.ietf.org/doc/html/rfc7519#section-4
+            List<Claim> claims = new() {
+                new Claim(JwtRegisteredClaimNames.Iss, _configuration["Jwt:Issuer"] ?? string.Empty),
+                new Claim(JwtRegisteredClaimNames.Aud, _configuration["Jwt:Audience"] ?? string.Empty),
+                new Claim(JwtRegisteredClaimNames.Nbf, now),
+                new Claim(JwtRegisteredClaimNames.Exp, expires),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Email ?? string.Empty),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
+                new Claim(JwtRegisteredClaimNames.Jti, user.Id)
+            };
+
+            foreach (var role in roles)
+                claims.Add(new Claim(ClaimTypes.Role, role));
+
+            var jwtToken = new JwtSecurityToken(
+                new JwtHeader(credentials),
+                new JwtPayload(claims)
             );
 
             var jwtTokenHandler = new JwtSecurityTokenHandler();
             var token = jwtTokenHandler.WriteToken(jwtToken);
-            return new TokenDTO(token, jwtToken.ValidTo);
+            return token;
         }
         catch
         {
             throw;
         }
     }
-    private async Task<bool> AddTokenToUserAsync(string userId, TokenDTO token)
-    {
-        var userDTO = await _users.GetUserAsync(userId);
-        userDTO.Token.Token = token.Token;
-        userDTO.Token.TokenExpires = token.TokenExpires;
-
-        return await _users.UpdateUserAsync(userDTO);
-    }
     #endregion
 
     #region Token Methods
-    public async Task<TokenDTO> GenerateTokenAsync(LoginUserDTO loginUserDto)
+    public async Task<string?> GenerateTokenAsync(LoginUserDTO loginUserDto)
     {
         try
         {
-            var user = await _users.GetUserAsync(loginUserDto, true);
+            var user = await _userService.GetUserAsync(loginUserDto);
 
-            if (user == null) throw new UnauthorizedAccessException();
+            if (user is null) throw new UnauthorizedAccessException();
 
-            var claims = GetClaims(user, true);
+            var roles = await _userManager.GetRolesAsync(user);
+            var token = CreateToken(roles, user);
 
-            var token = CreateToken(claims);
+            var result = await _userManager.SetAuthenticationTokenAsync(user, "VOD", "UserToken", token);
 
-            var succeeded = await AddTokenToUserAsync(user.Id, token);
-            if (!succeeded) throw new SecurityTokenException("Could not add token to user");
+            if (result != IdentityResult.Success)
+                throw new SecurityTokenException("Could not add token to user");
 
             return token;
         }
@@ -94,22 +92,20 @@ public class TokenService : ITokenService
         }
     }
 
-    public async Task<TokenDTO> GetTokenAsync(LoginUserDTO loginUserDto, string userId)
+    public async Task<string?> GetTokenAsync(LoginUserDTO loginUserDto, VODUser? user)
     {
         try
         {
-            var user = await _users.GetUserAsync(loginUserDto, true);
+            if (user is null) throw new UnauthorizedAccessException();
 
-            if (user == null) throw new UnauthorizedAccessException();
-            if (!userId.Equals(user.Id)) throw new UnauthorizedAccessException();
+            var token = await _userManager.GetAuthenticationTokenAsync(user, "VOD", "UserToken");
 
-            return new TokenDTO(user.Token, user.TokenExpires);
+            return token;
         }
         catch
         {
             throw;
         }
     }
-    #endregion*/
-
+    #endregion
 }
