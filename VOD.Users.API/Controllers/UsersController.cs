@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
@@ -8,6 +9,7 @@ namespace VOD.Users.API.Controllers
 {
     /*[Route("api/[controller]")]*/
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly UserManager<VODUser> _userManager;
@@ -15,6 +17,7 @@ namespace VOD.Users.API.Controllers
         public UsersController(UserManager<VODUser> userManager) => _userManager = userManager;
 
         [Route("users/register")]
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IResult> Register(RegisterUserDTO registerUserDto)
         {
