@@ -8,13 +8,10 @@
 
 <AuthorizeView Roles="Admin">
     <Authorized>
-        @context.User.FindFirst("sub")?.Value is authorized.
+        <h4>@context.User.FindFirst("sub")?.Value is authorized.</h4>
+        Welcome to your new app.
     </Authorized>
     <NotAuthorized>
         <h4>You are not authorized.</h4>
     </NotAuthorized>
 </AuthorizeView>
-
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
