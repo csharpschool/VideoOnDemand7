@@ -1,7 +1,3 @@
-using Azure;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Internal;
-
 var builder = WebApplication.CreateBuilder(args);
 
 RegisterServices(builder);

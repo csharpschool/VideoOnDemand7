@@ -1,6 +1,4 @@
-﻿using VOD.Token.Common.DTOs;
-
-namespace VOD.Token.API.Services;
+﻿namespace VOD.Token.API.Services;
 
 public interface ITokenService
 {

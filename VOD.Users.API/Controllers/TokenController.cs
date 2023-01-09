@@ -1,9 +1,5 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using VOD.Token.API.Services;
-using VOD.Token.Common.DTOs;
-using VOD.UI.Models;
 
 namespace VOD.Users.API.Controllers
 {

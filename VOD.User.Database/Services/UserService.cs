@@ -1,11 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using VOD.Token.Common.DTOs;
-using VOD.User.Database.Contexts;
-using VOD.User.Database.Entities;
-
-namespace VOD.User.Database.Services;
+﻿namespace VOD.User.Database.Services;
 
 public class UserService : IUserService
 {

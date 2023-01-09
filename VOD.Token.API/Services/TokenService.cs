@@ -1,8 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using VOD.Token.Common.DTOs;
-
-namespace VOD.Token.API.Services;
+﻿namespace VOD.Token.API.Services;
 
 public class TokenService : ITokenService
 {

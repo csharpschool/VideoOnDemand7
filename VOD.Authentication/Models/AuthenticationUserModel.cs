@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace VOD.UI.Models;
+﻿namespace VOD.Authentication.Models;
 
 public class AuthenticationUserModel
 {

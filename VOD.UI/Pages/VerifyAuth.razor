@@ -29,7 +29,7 @@ else
 
         if (isAuthenticated)
         {
-            userName = authState.User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value ?? string.Empty;
+            userName = authState.User.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty;
             isCustomer = authState.User.IsInRole("Customer");
             isAdmin = authState.User.IsInRole("Admin");
         }
