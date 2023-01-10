@@ -1,0 +1,12 @@
+﻿namespace VOD.Application.Database.Entities;
+
+public class Section : IEntity
+{
+    public int Id { get; set; }
+    [MaxLength(80), Required]
+    public string Title { get; set; }
+
+    public int CourseId { get; set; }
+    public Course Course { get; set; }
+    public virtual ICollection<Video> Videos { get; set; }
+}
