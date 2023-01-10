@@ -49,5 +49,27 @@ namespace VOD.Users.API.Controllers
             return Results.BadRequest();
         }
 
+        [Route("users/paid")]
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IResult> Paid(UpdateUserTokenDTO paidCustomerDTO)
+        {
+            try
+            {
+                if (!ModelState.IsValid) return Results.BadRequest();
+
+                var paidUser = await _userManager.FindByEmailAsync(paidCustomerDTO.Email);
+                if (paidUser is null) return Results.BadRequest();
+
+                IdentityResult result = await _userManager.AddToRoleAsync(paidUser, "customer");
+
+                if (result.Succeeded) return Results.Ok();
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return Results.BadRequest();
+        }
     }
 }

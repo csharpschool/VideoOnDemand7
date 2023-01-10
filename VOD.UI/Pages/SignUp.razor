@@ -1,0 +1,64 @@
+﻿@page "/sign-up"
+@inject UserHttpClient http
+@inject AuthenticationHttpClient authHttp
+@inject IAuthenticationService AuthService
+@inject NavigationManager NavManager
+
+<h3>Sign Up</h3>
+<h4>Payment procesing on this page (not implemented)</h4>
+
+@if(!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger">
+        <p>@errorMessage</p>
+    </div>
+}
+
+<EditForm Model="@signInModel" OnValidSubmit="@PaidCustomer">
+    <div class="mb-3">
+        <label>
+            <InputCheckbox @bind-Value="signInModel.IsCustomer" />
+            Customer (faking a paid customer)
+        </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+@code {
+    SignInModel signInModel = new SignInModel();
+    string errorMessage = string.Empty;
+
+    private async Task PaidCustomer()
+    {
+        errorMessage = string.Empty;
+        try
+        {
+            TokenUserDTO? user = await AuthService.GetUserFromToken();
+
+            if (!signInModel.IsCustomer || user is null)
+            {
+                errorMessage = "Payment failed. Try again later.";
+                return;
+            }
+
+
+            var customer = new UpdateUserTokenDTO(user.Email);
+
+            await http.PaidCustomer(customer, authHttp);
+
+            errorMessage = "Logout and Log in again.";
+
+            //if (result is not null)
+            //    NavManager.NavigateTo("/");
+            //else
+            //    errorMessage = "Registration succeeded, but there was an error login in.";
+        }
+        catch(Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+
+    }
+}
+

@@ -19,8 +19,6 @@ public class AuthenticationService : IAuthenticationService
     {
         try
         {
-            string? accessToken;
-
             var user = new LoginUserDTO(userForAuthentication.Email, userForAuthentication.Password);
             using StringContent jsonContent = new(
                 JsonSerializer.Serialize(user),
@@ -34,7 +32,13 @@ public class AuthenticationService : IAuthenticationService
 
             if (response.StatusCode.Equals(HttpStatusCode.Unauthorized) || string.IsNullOrWhiteSpace(responseContent))
             {
-                using HttpResponseMessage createResponse = await _http.Client.PostAsync("token/create", jsonContent);
+                var updateTokenUser = new UpdateUserTokenDTO(userForAuthentication.Email);
+                using StringContent jsonUpdateTokenUser = new(
+                    JsonSerializer.Serialize(updateTokenUser),
+                    Encoding.UTF8,
+                    "application/json");
+
+                using HttpResponseMessage createResponse = await _http.Client.PostAsync("token/create", jsonUpdateTokenUser);
 
                 createResponse.EnsureSuccessStatusCode();
 
@@ -56,7 +60,7 @@ public class AuthenticationService : IAuthenticationService
 
             return result;
         }
-        catch (Exception ex)
+        catch
         {
             return default;
         }
@@ -67,5 +71,14 @@ public class AuthenticationService : IAuthenticationService
         await _localStorage.RemoveItemAsync("authToken");
         ((AuthStateProvider)_authStateProvider).NotifyUserLogout();
         _http.Client.DefaultRequestHeaders.Authorization = null;
+    }
+
+    public async Task<TokenUserDTO?> GetUserFromToken()
+    {
+        var token = await _localStorage.GetItemAsync<string>("authToken");
+
+        if (string.IsNullOrWhiteSpace(token)) return default;
+
+        return JwtParser.ParseUserInfoFromJWT(token);
     }
 }

@@ -7,3 +7,4 @@ global using VOD.Authentication.HttpClients;
 global using VOD.Authentication.DTOs;
 global using VOD.UI.Models;
 global using VOD.UI.Extensions;
+global using VOD.Authentication.Classes;

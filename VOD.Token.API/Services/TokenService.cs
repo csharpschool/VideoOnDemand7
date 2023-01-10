@@ -68,11 +68,11 @@ public class TokenService : ITokenService
     #endregion
 
     #region Token Methods
-    public async Task<string?> GenerateTokenAsync(LoginUserDTO loginUserDto)
+    public async Task<string?> GenerateTokenAsync(UpdateUserTokenDTO updateTokenDTO)
     {
         try
         {
-            var user = await _userService.GetUserAsync(loginUserDto);
+            var user = await _userService.GetUserAsync(updateTokenDTO.Email);
 
             if (user is null) throw new UnauthorizedAccessException();
 

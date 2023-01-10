@@ -13,4 +13,6 @@ public class CreateUserModel
 
     [Required, DisplayName("Confirm Password"), Compare(nameof(Password), ErrorMessage = "Paswords don't match.")]
     public string ConfirmPassword { get; set; }
+
+    public bool IsCustomer { get; set; } = false;
 }

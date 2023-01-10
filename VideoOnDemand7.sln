@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VOD.Users.API", "VOD.Users.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VOD.UI", "VOD.UI\VOD.UI.csproj", "{2A5BEC08-8410-4464-B975-E8FACB2FEB41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VOD.Authentication", "VOD.Authentication\VOD.Authentication.csproj", "{3D1FBE1F-AC1E-46C1-A74B-921EF15B6C6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VOD.Authentication", "VOD.Authentication\VOD.Authentication.csproj", "{3D1FBE1F-AC1E-46C1-A74B-921EF15B6C6F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

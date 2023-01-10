@@ -42,11 +42,11 @@ public class TokenController : ControllerBase
 
     [Route("token/create")]
     [HttpPost]
-    public async Task<IResult> Create(LoginUserDTO loginUserDto)
+    public async Task<IResult> Create(UpdateUserTokenDTO updateTokenDTO)
     {
         try
         {
-            var jwt = await _tokenService.GenerateTokenAsync(loginUserDto);
+            var jwt = await _tokenService.GenerateTokenAsync(updateTokenDTO);
             if (jwt == null) return Results.Unauthorized();
             return Results.Created("token", jwt); 
         }

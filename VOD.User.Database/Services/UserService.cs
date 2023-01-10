@@ -30,4 +30,19 @@ public class UserService : IUserService
 
         return default;
     }
+
+    public async Task<VODUser?> GetUserAsync(string email)
+    {
+        try
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            return user;
+        }
+        catch
+        {
+        }
+
+        return default;
+    }
+
 }

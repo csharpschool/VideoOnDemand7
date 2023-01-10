@@ -29,6 +29,13 @@
         <InputText id="confirm-password" type="password" class="form-control me-2" @bind-Value="model.ConfirmPassword" placeholder="Confirm Password"></InputText>
         <ValidationMessage For="@(() => model.ConfirmPassword)" />
     </div>
+    <div class="mb-3">
+        <label>
+            <InputCheckbox @bind-Value="model.IsCustomer" />
+            Customer (faking a paid customer)
+        </label>
+    </div>
+
     <button type="submit" class="btn btn-primary">Submit</button>
 </EditForm>
 
@@ -49,7 +56,7 @@
             else
                 errorMessage = "Registration succeeded, but there was an error login in.";
         }
-        catch (Exception ex)
+        catch
         {
             errorMessage = "Failed to create user.";
         }

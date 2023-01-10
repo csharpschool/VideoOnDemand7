@@ -32,9 +32,9 @@ else
         if (isAuthenticated)
         {
             userName = authState.User.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty;
-            isRegistered = authState.User.IsInRole(UserRoles.Registered);
-            isCustomer = authState.User.IsInRole(UserRoles.Customer);
-            isAdmin = authState.User.IsInRole(UserRoles.Admin);
+            isRegistered = authState.User.IsInRole(UserRole.Registered);
+            isCustomer = authState.User.IsInRole(UserRole.Customer);
+            isAdmin = authState.User.IsInRole(UserRole.Admin);
         }
     }
 }
