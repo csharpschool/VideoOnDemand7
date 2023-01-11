@@ -63,4 +63,24 @@ public class MembersipService : IMembersipService
         }
     }
 
+    public async Task<VideoDTO> GetVideo(int? videoId)
+    {
+        try
+        {
+            if (videoId is null) return new VideoDTO();
+
+            using HttpResponseMessage courseResponse = await _http.Client.GetAsync($"videos/{videoId}");
+            courseResponse.EnsureSuccessStatusCode();
+
+            var result = JsonSerializer.Deserialize<VideoDTO>(await courseResponse.Content.ReadAsStreamAsync(),
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return result ?? new VideoDTO();
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+
 }

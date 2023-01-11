@@ -6,5 +6,6 @@ namespace VOD.Application.Common.Services
     {
         Task<CourseDTO> GetCourse(int? courseId);
         Task<List<CourseDTO>> GetCourses();
+        Task<VideoDTO> GetVideo(int? videoId);
     }
 }

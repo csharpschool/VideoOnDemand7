@@ -15,6 +15,7 @@ public class VideoDTO
     // access to a video’s course and Module
     public int SectionId { get; set; }
     public int ModuleId { get; set; }
+    public int CourseId { get; set; }
     public string Course { get; set; }
     public string Module { get; set; }
 

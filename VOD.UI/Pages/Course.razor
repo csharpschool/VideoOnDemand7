@@ -3,7 +3,7 @@
 
 <h3 class="text-center">Course</h3>
 
-<div class="row small-bottom-margin">
+<div class="row">
     <div class="col-auto">
         <a class="btn btn-primary rounded-0 mb-1" href="/">
             <i class="oi oi-arrow-left"></i><span class="vertical-align"> Back to Dashboard</span>
@@ -40,7 +40,7 @@
                 <div class="card-body rounded-0 p-0">
                     @if (sect.Videos != null && sect.Videos.Count > 0)
                     {
-                        <ModuleVideosPartial Videos="@sect.Videos" />
+                        <SectionVideosPartial Videos="@sect.Videos" />
                     }
                 </div>
             </div>
