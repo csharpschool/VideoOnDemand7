@@ -1,19 +1,33 @@
 ﻿@page "/"
+@inject IMembersipService membershipService
+
 @*@using Microsoft.AspNetCore.Authorization
 @attribute [Authorize(Roles = "Admin")]*@
 
-<PageTitle>Film Portal</PageTitle>
+<PageTitle>Dashboard</PageTitle>
+<h1 class="text-center">Dashboard</h1>
 
 
 <AuthorizeView Policy="@UserPolicy.Registered">
     <NotAuthorized>
-        <h1>Film Portal - Anonymous</h1>
-        <h4>@context.User.FindFirst("sub")?.Value you are not registered.</h4>
-        @*<Register />*@
+        <h4 class="text-center">@context.User.FindFirst("sub")?.Value register for free or paid courses.</h4>
     </NotAuthorized>
     <Authorized>
-        <h1>Film Portal - Registered</h1>
-        <h4>@context.User.FindFirst("sub")?.Value is authorized.</h4>
-        Welcome to your new app.
+        <h4 class="text-center">Welcome @context.User.FindFirst("sub")?.Value.</h4>
+        <div class="d-flex flex-wrap justify-content-center">
+        @foreach (var course in Courses)
+        {
+            <CourseCardPartial Title="@course.Title" Description="@course.Description" ImageUrl="@course.ImageUrl" CourseId="@course.Id" />
+        }
+        </div>
     </Authorized>
 </AuthorizeView>
+
+@code{
+    public List<CourseDTO> Courses { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Courses = await membershipService.GetCourses();
+    }
+}

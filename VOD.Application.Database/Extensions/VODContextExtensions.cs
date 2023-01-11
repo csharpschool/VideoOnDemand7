@@ -32,7 +32,7 @@ public static class VODContextExtensions
             await service.SaveChangesAsync();
             #endregion
 
-            #region Add Courses if they don't already exist
+            #region Add Courses
             var instructor1 = await service.SingleAsync<Instructor, InstructorDTO>(c => c.Name.Equals("John Doe"));
             var instructor2 = await service.SingleAsync<Instructor, InstructorDTO>(c => c.Name.Equals("Jane Doe"));
             await service.AddAsync<Course, CourseDTO>(new CourseDTO

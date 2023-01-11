@@ -1,0 +1,68 @@
+﻿@page "/course/{Id:int}"
+@inject IMembersipService membershipService
+
+<h3 class="text-center">Course</h3>
+
+<div class="row small-bottom-margin">
+    <div class="col-auto">
+        <a class="btn btn-primary rounded-0 mb-1" href="/">
+            <i class="oi oi-arrow-left"></i><span class="vertical-align"> Back to Dashboard</span>
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card rounded-0">
+            <div class="marquee" style="background-image:url('@Model.MarqueeImageUrl');">
+                <img src="@Model.ImageUrl">
+            </div>
+            <div class="card-body">
+                <h1 class="card-title">@Model.Title</h1>
+                <h4 class="card-text">
+                    @Model.Description
+                </h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex flex-wrap  justify-content-center">
+    <div class="flex-fill">
+        @*Add section here*@
+        @foreach (var sect in Model.Sections)
+        {
+            <div class="card mt-1 border-0">
+                <div class="card-body px-0">
+                    <h5>@sect.Title</h5>
+                </div>
+                <hr class="m-0">
+                <div class="card-body rounded-0 p-0">
+                    @if (sect.Videos != null && sect.Videos.Count > 0)
+                    {
+                        <ModuleVideosPartial Videos="@sect.Videos" />
+                    }
+                </div>
+            </div>
+        }
+    </div>
+    <div class="ms-md-4" >
+        @*Add instructor bio here*@
+        @if (Model.Instructor != null)
+        {
+            <InstructorBioPartial Instructor="@Model.Instructor"></InstructorBioPartial>
+            
+        }
+    </div>
+</div>
+
+
+@code {
+    [Parameter] public int? Id { get; set; }
+    public CourseDTO Model { get; set; } = new CourseDTO();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model = await membershipService.GetCourse(Id);
+    }
+}

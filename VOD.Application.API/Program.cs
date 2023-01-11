@@ -59,12 +59,14 @@ void ConfigureAutoMapper(IServiceCollection services)
     {
         cfg.CreateMap<Video, VideoDTO>().ReverseMap();
 
-        cfg.CreateMap<Instructor, InstructorDTO>().ReverseMap();
+        cfg.CreateMap<Instructor, InstructorDTO>()
+        .ReverseMap()
+        .ForMember(dest => dest.Courses, src => src.Ignore());
 
         cfg.CreateMap<Course, CourseDTO>()
-            .ForMember(dest => dest.Instructor, src => src.MapFrom(s => s.Instructor.Name))
-            .ReverseMap()
-            .ForMember(dest => dest.Instructor , src => src.Ignore());
+            //.ForMember(dest => dest.Instructor, src => src.MapFrom(s => s.Instructor.Name))
+            .ReverseMap();
+            //.ForMember(dest => dest.Instructor , src => src.Ignore());
 
         cfg.CreateMap<Section, SectionDTO>()
             .ForMember(dest => dest.Course, src => src.MapFrom(s => s.Course.Title))
@@ -74,3 +76,4 @@ void ConfigureAutoMapper(IServiceCollection services)
     var mapper = config.CreateMapper();
     services.AddSingleton(mapper);
 }
+

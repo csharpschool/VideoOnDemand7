@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\VOD.Authentication\VOD.Authentication.csproj" />
-    <ProjectReference Include="..\VOD.Token.Common\VOD.Token.Common.csproj" />
   </ItemGroup>
 
 </Project>

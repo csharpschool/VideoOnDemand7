@@ -9,4 +9,6 @@ public class Instructor : IEntity
     public string Description { get; set; }
     [MaxLength(1024)]
     public string Avatar { get; set; }
+
+    public virtual ICollection<Course>? Courses { get; set; }
 }

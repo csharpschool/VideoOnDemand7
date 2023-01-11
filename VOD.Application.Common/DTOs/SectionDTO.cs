@@ -4,7 +4,6 @@ namespace VOD.Application.Common.DTOs;
 public class SectionDTO
 {
     public int Id { get; set; }
-    [MaxLength(80), Required]
     public string Title { get; set; }
 
     public int CourseId { get; set; }

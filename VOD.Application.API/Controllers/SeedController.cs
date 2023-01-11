@@ -12,10 +12,7 @@ namespace VOD.Application.API.Controllers
     {
         private readonly IDbService _db;
 
-        public SeedController(IDbService db)
-        {
-            _db = db;
-        }
+        public SeedController(IDbService db) => _db = db;
 
         [AllowAnonymous]
         [HttpPost]
@@ -30,6 +27,5 @@ namespace VOD.Application.API.Controllers
 
             return Results.BadRequest();
         }
-
     }
 }

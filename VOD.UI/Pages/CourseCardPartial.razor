@@ -1,0 +1,18 @@
+﻿<div style="max-width:350px;">
+    <div class="card rounded-0 m-2">
+        <img class="card-img-top rounded-0" src="@ImageUrl">
+        <div class="card-body">
+            <h3 class="card-title">@Title</h3>
+            <p class="card-text">@Description</p>
+            <a class="btn btn-primary rounded-0" href="Course/@CourseId">View Course</a>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public string? Description { get; set; }
+    [Parameter] public string? ImageUrl { get; set; }
+    [Parameter] public int? CourseId { get; set; }
+}

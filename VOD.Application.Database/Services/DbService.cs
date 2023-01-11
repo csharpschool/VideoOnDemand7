@@ -22,6 +22,15 @@ public class DbService : IDbService
         return _mapper.Map<List<TDto>>(entities);
     }
 
+    public async Task<List<TDto>> GetAsync<TEntity, TDto>(
+        Expression<Func<TEntity, bool>> expression)
+        where TEntity : class, IEntity
+        where TDto : class
+    {
+        var entities = await _db.Set<TEntity>().Where(expression).ToListAsync();
+        return _mapper.Map<List<TDto>>(entities);
+    }
+
     private async Task<TEntity?> SingleAsync<TEntity>(
     Expression<Func<TEntity, bool>> expression)
     where TEntity : class, IEntity =>
@@ -82,20 +91,31 @@ public class DbService : IDbService
         return true;
     }
 
-/*    public bool Delete<TReferenceEntity, TDto>(TDto dto)
-    where TReferenceEntity : class, IReferenceEntity
-    where TDto : class
+    public void Include<TEntity>() where TEntity : class, IEntity
     {
-        try
-        {
-            var entity = _mapper.Map<TReferenceEntity>(dto);
-            if (entity is null) return false;
-            _db.Remove(entity);
-        }
-        catch { throw; }
+        var propertyNames = _db.Model.FindEntityType(typeof(TEntity))?.GetNavigations().Select(e => e.Name);
 
-        return true;
-    }*/
+        if(propertyNames is null) return;
+
+        foreach (var name in propertyNames)
+            _db.Set<TEntity>().Include(name).Load();
+    }
+
+
+    /*    public bool Delete<TReferenceEntity, TDto>(TDto dto)
+        where TReferenceEntity : class, IReferenceEntity
+        where TDto : class
+        {
+            try
+            {
+                var entity = _mapper.Map<TReferenceEntity>(dto);
+                if (entity is null) return false;
+                _db.Remove(entity);
+            }
+            catch { throw; }
+
+            return true;
+        }*/
 
 
 }

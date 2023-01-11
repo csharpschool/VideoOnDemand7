@@ -5,6 +5,11 @@ public interface IDbService
     Task<List<TDto>> GetAsync<TEntity, TDto>()
     where TEntity : class, IEntity
     where TDto : class;
+
+    Task<List<TDto>> GetAsync<TEntity, TDto>(Expression<Func<TEntity, bool>> expression)
+    where TEntity : class, IEntity
+    where TDto : class;
+
     Task<TDto> SingleAsync<TEntity, TDto>(
     Expression<Func<TEntity, bool>> expression)
         where TEntity : class, IEntity
@@ -31,5 +36,5 @@ public interface IDbService
     Task<bool> SaveChangesAsync();
 
     string GetURI<TEntity>(TEntity entity) where TEntity : class, IEntity;
-
+    void Include<TEntity>() where TEntity : class, IEntity;
 }

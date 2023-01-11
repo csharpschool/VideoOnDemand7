@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\VOD.Application.Common\VOD.Application.Common.csproj" />
     <ProjectReference Include="..\VOD.Authentication\VOD.Authentication.csproj" />
   </ItemGroup>
 

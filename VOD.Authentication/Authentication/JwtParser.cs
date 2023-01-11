@@ -1,4 +1,6 @@
-﻿namespace VOD.Authentication;
+﻿using System.Data;
+
+namespace VOD.Authentication;
 
 public class JwtParser
 {
@@ -66,6 +68,29 @@ public class JwtParser
 
         return null;
     }
-        
+
+    public static bool ParseIsInRoleFromJWT(string jwt, string role)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(jwt)) return false;
+
+            List<Claim>? claims = ParseUserInfoFromJWT(jwt)?.Roles ;
+
+            if (claims is null || claims.Count.Equals(0)) return false;
+
+            var isInRole = claims.Exists(c => c.Value.Equals(role));
+
+            return isInRole;
+        }
+        catch (Exception ex)
+        {
+        }
+
+        return false;
+    }
+
+    public static bool ParseIsNotInRoleFromJWT(string jwt, string role) => !ParseIsInRoleFromJWT(jwt, role);
+
 
 }

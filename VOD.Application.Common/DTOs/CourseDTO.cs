@@ -8,8 +8,9 @@ public class CourseDTO
     public string MarqueeImageUrl { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
+    public bool Free { get; set; }
 
     public int InstructorId { get; set; }
-    public string Instructor { get; set; }
-    public List<SectionDTO> Sections { get; set; }
+    public InstructorDTO Instructor { get; set; } = new();
+    public List<SectionDTO> Sections { get; set; } = new();
 }

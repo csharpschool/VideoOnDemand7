@@ -11,8 +11,9 @@ public class Course : IEntity
     public string Title { get; set; }
     [MaxLength(1024)]
     public string Description { get; set; }
+    public bool Free { get; set; }
 
     public int InstructorId { get; set; }
-    public Instructor Instructor { get; set; }
-    public ICollection<Section> Sections { get; set; }
+    public virtual Instructor Instructor { get; set; }
+    public virtual ICollection<Section> Sections { get; set; }
 }

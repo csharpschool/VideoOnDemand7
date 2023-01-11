@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VOD.Application.Database.Contexts;
 
@@ -10,9 +11,11 @@ using VOD.Application.Database.Contexts;
 namespace VOD.Application.Database.Migrations
 {
     [DbContext(typeof(VODContext))]
-    partial class VODContextModelSnapshot : ModelSnapshot
+    [Migration("20230111062927_addedFreeToCustomer")]
+    partial class addedFreeToCustomer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,7 +62,7 @@ namespace VOD.Application.Database.Migrations
 
                     b.HasIndex("InstructorId");
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("VOD.Application.Database.Entities.Instructor", b =>
@@ -87,7 +90,7 @@ namespace VOD.Application.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Instructors", (string)null);
+                    b.ToTable("Instructors");
                 });
 
             modelBuilder.Entity("VOD.Application.Database.Entities.Section", b =>
@@ -110,7 +113,7 @@ namespace VOD.Application.Database.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Sections", (string)null);
+                    b.ToTable("Sections");
                 });
 
             modelBuilder.Entity("VOD.Application.Database.Entities.Video", b =>
@@ -151,7 +154,7 @@ namespace VOD.Application.Database.Migrations
 
                     b.HasIndex("SectionId");
 
-                    b.ToTable("Videos", (string)null);
+                    b.ToTable("Videos");
                 });
 
             modelBuilder.Entity("VOD.Application.Database.Entities.Course", b =>
