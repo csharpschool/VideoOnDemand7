@@ -5,48 +5,54 @@
     <DataAnnotationsValidator />
         <h4>@Title</h4>
     <div class="mb-3">
-        @*<label for="title" class="form-label">Title</label>*@
-        <InputText id="title" class="form-control me-2" @bind-Value="Model.Title" placeholder="Title"></InputText>
+        @if (Page.Equals(PageType.Delete))
+        {
+            <InputText id="title" class="form-control me-2" @bind-Value="Model.Title" disabled placeholder="Title"></InputText>
+        }
+        else
+        {
+            <InputText id="title" class="form-control me-2" @bind-Value="Model.Title" placeholder="Title"></InputText>
+        }
         <ValidationMessage For="@(() => Model.Title)" />
     </div>
-    <div class="mb-3">
-        @*<label for="description" class="form-label">Description</label>*@
-        <InputText id="description" class="form-control me-2" @bind-Value="Model.Description" placeholder="Description"></InputText>
-        <ValidationMessage For="@(() => Model.Description)" />
-    </div>
-    <div class="mb-3">
-        @*<label for="image-url" class="form-label">Image Url</label>*@
-        <InputText id="image-url" class="form-control me-2" @bind-Value="Model.ImageUrl" placeholder="Image Url"></InputText>
-        <ValidationMessage For="@(() => Model.ImageUrl)" />
-    </div>
-    <div class="mb-3">
-        @*<label for="marquee-image-url" class="form-label">Marquee Image Url</label>*@
-        <InputText id="marquee-image-url" class="form-control me-2" @bind-Value="Model.MarqueeImageUrl" placeholder="Marquee Image Url"></InputText>
-        <ValidationMessage For="@(() => Model.MarqueeImageUrl)" />
-    </div>
-    <div>
-        @*Instructor*@
-        <InputSelect @bind-Value="Model.InstructorId" class="form-control mb-3">
-            <option value=0>Instructor ...</option>
-            @foreach (var instructor in Instructors)
-            {
-                <option value="@instructor.Id">@instructor.Name</option>
-            }
-        </InputSelect>
-    </div>
+    @if (!Page.Equals(PageType.Delete))
+    {
+        <div class="mb-3">
+            <InputText id="description" class="form-control me-2" @bind-Value="Model.Description" placeholder="Description"></InputText>
+            <ValidationMessage For="@(() => Model.Description)" />
+        </div>
+        <div class="mb-3">
+            <InputText id="image-url" class="form-control me-2" @bind-Value="Model.ImageUrl" placeholder="Image Url"></InputText>
+            <ValidationMessage For="@(() => Model.ImageUrl)" />
+        </div>
+        <div class="mb-3">
+            <InputText id="marquee-image-url" class="form-control me-2" @bind-Value="Model.MarqueeImageUrl" placeholder="Marquee Image Url"></InputText>
+            <ValidationMessage For="@(() => Model.MarqueeImageUrl)" />
+        </div>
+        <div class="mb-3">
+            <InputSelect @bind-Value="Model.InstructorId" class="form-control mb-3">
+                <option value=0>Instructor ...</option>
+                @foreach (var instructor in Instructors)
+                {
+                    <option value="@instructor.Id">@instructor.Name</option>
+                }
+            </InputSelect>
+        </div>
         <div class="mb-3">
             <label>
                 <InputCheckbox @bind-Value="Model.Free" />
                 Free Course
             </label>
         </div>
-    <button type="submit" class="btn btn-primary rounded-0">Submit</button>
+    }
+    <button type="submit" class="btn btn-@(Page.Equals(PageType.Delete) ? "danger" : "primary") rounded-0">@Page</button>
 </EditForm>
 </div>
 @code {
     [Parameter] public bool IsAdmin { get; set; }
     [Parameter] public CourseDTO Model { get; set; } = new();
     [Parameter] public string Title { get; set; } = string.Empty;
+    [Parameter] public string Page { get; set; } = string.Empty;
     public List<InstructorDTO> Instructors { get; set; } = new();
     [Parameter] public EventCallback<string> OnChange { get; set; }
 
@@ -59,10 +65,12 @@
     {
         try
         {
-            if(Model.Id.Equals(0))
+            if (Page.Equals(PageType.Create))
                 await AdminService.CreateCourse(Model);
-            else
+            else if (Page.Equals(PageType.Edit))
                 await AdminService.EditCourse(Model);
+            else if (Page.Equals(PageType.Delete))
+                await AdminService.DeleteCourse(Model.Id);
 
             await OnChange.InvokeAsync("");
         }

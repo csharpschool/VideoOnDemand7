@@ -97,6 +97,20 @@ public class AdminService : IAdminService
         }
     }
 
+    public async Task DeleteCourse(int id)
+    {
+        try
+        {
+            using HttpResponseMessage response = await _http.Client.DeleteAsync($"courses/{id}");
+
+            response.EnsureSuccessStatusCode();
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+
     public async Task<List<InstructorDTO>> GetInstructors()
     {
         try

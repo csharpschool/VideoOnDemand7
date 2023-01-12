@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VOD.Application.Common.DTOs;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -114,8 +115,25 @@ namespace VOD.Application.API.Controllers
 
         // DELETE api/<CoursesController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IResult> Delete(int id)
         {
+            try
+            {
+                var success = await _db.DeleteAsync<Course>(id);
+            
+                if (!success) return Results.NotFound();
+
+                success = await _db.SaveChangesAsync();
+
+                if (!success) return Results.BadRequest();
+
+                return Results.NoContent();
+            }
+            catch
+            {
+            }
+
+            return Results.BadRequest();
         }
     }
 }

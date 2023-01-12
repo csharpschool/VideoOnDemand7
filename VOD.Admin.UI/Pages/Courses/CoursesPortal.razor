@@ -13,17 +13,18 @@
         </div>
     }
 
-    @if (navigation == PageType.Create)
+    @if (Navigation == PageType.Create)
     {
-    <CreateEditCourse IsAdmin=@IsAdmin Title="Create Course" OnChange="OnChange"></CreateEditCourse>
+    <CreateEditCourse IsAdmin=@IsAdmin Page="@Navigation" Title="Create Course" OnChange="OnChange"></CreateEditCourse>
     }
-    @if (navigation == PageType.Delete)
+    @if (Navigation == PageType.Delete)
     {
-        <DeleteCourse IsAdmin=@IsAdmin></DeleteCourse>
+    @*<DeleteCourse IsAdmin=@IsAdmin></DeleteCourse>*@
+    <CreateEditCourse IsAdmin=@IsAdmin Page="@Navigation" Title="Delete Course" OnChange="OnChange" Model="Course"></CreateEditCourse>
     }
-    @if (navigation == PageType.Edit)
+    @if (Navigation == PageType.Edit)
     {
-    <CreateEditCourse IsAdmin=@IsAdmin Title="Edit Course" OnChange="OnChange" Model="Course"></CreateEditCourse>
+    <CreateEditCourse IsAdmin=@IsAdmin Page="@Navigation" Title="Edit Course" OnChange="OnChange" Model="Course"></CreateEditCourse>
     }
 
 <div class="d-flex me-1">
@@ -39,12 +40,12 @@
 
 @code {
     [Parameter] public bool IsAdmin { get; set; }
-    string navigation = PageType.Index;
+    string Navigation { get; set; } = PageType.Index;
     public List<CourseDTO> Model { get; set; } = new();
     public CourseDTO Course { get; set; } = new();
     public string Alert { get; set; } = "";
 
-    void ChangePageType(string pageType) => navigation = pageType;
+    void ChangePageType(string pageType) => Navigation = pageType;
 
     protected override async Task OnInitializedAsync()
     {
@@ -59,7 +60,7 @@
 
     async Task OnClick(ClickModel model)
     {
-        if (model.PageType.Equals(PageType.Edit))
+        if (model.PageType.Equals(PageType.Edit) || model.PageType.Equals(PageType.Delete))
         {
             Course = await AdminService.GetCourse(model.id);
         }
