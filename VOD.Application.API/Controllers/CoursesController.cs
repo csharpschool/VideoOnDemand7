@@ -56,8 +56,25 @@ namespace VOD.Application.API.Controllers
 
         // POST api/<CoursesController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IResult> Post([FromBody] CourseCreateDTO dto)
         {
+            try
+            {
+                CourseDTO courseDTO = new CourseDTO { Description = dto.Description, Free = dto.Free, ImageUrl = dto.ImageUrl, InstructorId = dto.InstructorId, MarqueeImageUrl = dto.MarqueeImageUrl, Title = dto.Title };
+
+                var course = await _db.AddAsync<Course, CourseDTO>(courseDTO);
+
+                var success = await _db.SaveChangesAsync();
+
+                if(!success) return Results.BadRequest();
+
+                return Results.Created(_db.GetURI<Course>(course), course);
+            }
+            catch
+            {
+            }
+
+            return Results.BadRequest();
         }
 
         // PUT api/<CoursesController>/5

@@ -2,6 +2,8 @@
 using VOD.Authentication;
 using System.Text.Json;
 using VOD.Application.Common.DTOs;
+using System.Net.Http.Json;
+using System.Text;
 
 namespace VOD.Application.Common.Services;
 
@@ -34,8 +36,45 @@ public class AdminService : IAdminService
             throw;
         }
     }
+    public async Task CreateCourse(CourseDTO course)
+    {
+        try
+        {
+            CourseCreateDTO courseCreate = new() { Description = course.Description, Free = course.Free, ImageUrl = course.ImageUrl, InstructorId = course.InstructorId, MarqueeImageUrl = course.MarqueeImageUrl, Title = course.Title };
+
+            using StringContent jsonContent = new(
+                JsonSerializer.Serialize(courseCreate),
+                Encoding.UTF8,
+                "application/json");
+
+            using HttpResponseMessage response = await _http.Client.PostAsync("courses", jsonContent);
+
+            response.EnsureSuccessStatusCode();
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
 
 
+    public async Task<List<InstructorDTO>> GetInstructors()
+    {
+        try
+        {
+            using HttpResponseMessage courseResponse = await _http.Client.GetAsync($"instructors");
+            courseResponse.EnsureSuccessStatusCode();
+
+            var result = JsonSerializer.Deserialize<List<InstructorDTO>>(await courseResponse.Content.ReadAsStreamAsync(),
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return result ?? new List<InstructorDTO>();
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
 
 
     #region For development purposes only

@@ -1,6 +1,70 @@
-﻿<h3>Create Course</h3>
+﻿@inject IAdminService AdminService
 
+<div class="d-xl-flex justify-content-center">
+<EditForm Model="@model" OnValidSubmit="@Create" class="mb-5 border border-1 border-secondary p-2 w-25">
+    <DataAnnotationsValidator />
+    <h4>Create</h4>
+    <div class="mb-3">
+        @*<label for="title" class="form-label">Title</label>*@
+        <InputText id="title" class="form-control me-2" @bind-Value="model.Title" placeholder="Title"></InputText>
+        <ValidationMessage For="@(() => model.Title)" />
+    </div>
+    <div class="mb-3">
+        @*<label for="description" class="form-label">Description</label>*@
+        <InputText id="description" class="form-control me-2" @bind-Value="model.Description" placeholder="Description"></InputText>
+        <ValidationMessage For="@(() => model.Description)" />
+    </div>
+    <div class="mb-3">
+        @*<label for="image-url" class="form-label">Image Url</label>*@
+        <InputText id="image-url" class="form-control me-2" @bind-Value="model.ImageUrl" placeholder="Image Url"></InputText>
+        <ValidationMessage For="@(() => model.ImageUrl)" />
+    </div>
+    <div class="mb-3">
+        @*<label for="marquee-image-url" class="form-label">Marquee Image Url</label>*@
+        <InputText id="marquee-image-url" class="form-control me-2" @bind-Value="model.MarqueeImageUrl" placeholder="Marquee Image Url"></InputText>
+        <ValidationMessage For="@(() => model.MarqueeImageUrl)" />
+    </div>
+    <div>
+        @*Instructor*@
+        <InputSelect @bind-Value="model.InstructorId" class="form-control mb-3">
+            <option value=0>Instructor ...</option>
+            @foreach (var instructor in Instructors)
+            {
+                <option value="@instructor.Id">@instructor.Name</option>
+            }
+        </InputSelect>
+    </div>
+        <div class="mb-3">
+            <label>
+                <InputCheckbox @bind-Value="model.Free" />
+                Free Course
+            </label>
+        </div>
+    <button type="submit" class="btn btn-primary rounded-0">Submit</button>
+</EditForm>
+</div>
 @code {
     [Parameter] public bool IsAdmin { get; set; }
+    private CourseDTO model = new();
+    public List<InstructorDTO> Instructors { get; set; } = new();
+    [Parameter] public EventCallback<string> OnCreate { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        Instructors = await AdminService.GetInstructors();
+    }
+
+    private async Task Create()
+    {
+        try
+        {
+            await AdminService.CreateCourse(model);
+            await OnCreate.InvokeAsync("");
+        }
+        catch
+        {
+            await OnCreate.InvokeAsync("Couldn't create the course.");
+        }
+    }
 }
+

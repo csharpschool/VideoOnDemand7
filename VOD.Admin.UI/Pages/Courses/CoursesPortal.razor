@@ -3,16 +3,19 @@
 
 @*@if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
 {*@
-    @*<div class="row">
-        <div class="px-0">
-            <alert alert-type="success">@Alert</alert>
+    @if(!string.IsNullOrEmpty(Alert))
+    {
+        <div class="d-flex">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>@Alert</strong>
+                <button type="button" @onclick="CloseAlert" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         </div>
-    </div>*@
-
+    }
 
     @if (navigation == PageType.Create)
     {
-        <CreateCourse IsAdmin=@IsAdmin></CreateCourse>
+    <CreateCourse IsAdmin=@IsAdmin OnCreate="OnCreate"></CreateCourse>
     }
     @if (navigation == PageType.Delete)
     {
@@ -28,7 +31,7 @@
     <button type="button" class="btn btn-outline-primary rounded-0 me-1" @onclick="()=>ChangePageType(PageType.Index)">Index</button>
     <button type="button" class="btn btn-outline-success rounded-0" @onclick="()=>ChangePageType(PageType.Create)">Create</button>
 </div>
-<CoursesIndex IsAdmin=@IsAdmin OnClick="ClickHandler"></CoursesIndex>
+<CoursesIndex IsAdmin=@IsAdmin OnClick="OnClick" Model="Model"></CoursesIndex>
 
 
 
@@ -37,13 +40,39 @@
 @code {
     [Parameter] public bool IsAdmin { get; set; }
     string navigation = PageType.Index;
+    public List<CourseDTO> Model { get; set; } = new();
+    public string Alert { get; set; } = "";
 
     void ChangePageType(string pageType) => navigation = pageType;
 
-    void ClickHandler(string type)
+    protected override async Task OnInitializedAsync()
+    {
+        Alert = "";
+        Model = await AdminService.GetCourses();
+    }
+
+    void CloseAlert()
+    {
+        Alert = "";
+    }
+
+    void OnClick(string type)
     {
         ChangePageType(type);
         StateHasChanged();
     }
 
+    async Task OnCreate(string alert)
+    {
+        try
+        {
+            Alert = alert;
+            Model = await AdminService.GetCourses();
+            ChangePageType(PageType.Index);
+        }
+        catch
+        {
+            Alert = "Couldn't create the course.";
+        }
+    }
 }

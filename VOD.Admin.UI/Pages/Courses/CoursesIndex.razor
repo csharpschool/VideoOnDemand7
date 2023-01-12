@@ -42,12 +42,11 @@
 
 @code {
     [Parameter] public bool IsAdmin { get; set; }
-    public string Alert { get; set; } = "";
-    public List<CourseDTO> Model { get; set; } = new();
+    [Parameter] public List<CourseDTO> Model { get; set; } = new();
     [Parameter] public EventCallback<string> OnClick { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        Model = await AdminService.GetCourses();
-    }
+   
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    Model = await AdminService.GetCourses();
+    //}
 }

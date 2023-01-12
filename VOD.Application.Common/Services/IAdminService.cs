@@ -7,7 +7,9 @@ namespace VOD.Application.Common.Services
     {
         bool IsAdmin { get; set; }
 
+        Task CreateCourse(CourseDTO course);
         Task<List<CourseDTO>> GetCourses();
+        Task<List<InstructorDTO>> GetInstructors();
         Task<bool> HasAdminRole();
         Task SetToken();
     }

@@ -1,4 +1,7 @@
-﻿namespace VOD.Application.Database.Entities;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
+namespace VOD.Application.Database.Entities;
 
 public class Course : IEntity
 {
@@ -14,6 +17,8 @@ public class Course : IEntity
     public bool Free { get; set; }
 
     public int InstructorId { get; set; }
+    [JsonIgnore, NotMapped]
     public virtual Instructor Instructor { get; set; }
+    [JsonIgnore, NotMapped]
     public virtual ICollection<Section> Sections { get; set; }
 }
