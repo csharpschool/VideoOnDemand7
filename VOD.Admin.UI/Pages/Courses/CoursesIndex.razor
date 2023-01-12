@@ -1,0 +1,53 @@
+﻿@inject IAdminService AdminService
+@*@inject SignInManager<VODUser> SignInManager*@
+
+@*@if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+{*@
+    @*<div class="row">
+        <div class="px-0">
+            <alert alert-type="success">@Alert</alert>
+        </div>
+    </div>*@
+
+@*<partial name="_PageButtonsPartial" />*@
+<table class="table mt-2">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Free</th>
+            <th>Instructor</th>
+            <th>Description</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td>@item.Free</td>
+                <td>@item.Instructor.Name</td>
+                <td>@item.Description.Truncate(50)</td>
+                <td>
+                    <div class="d-flex me-1 justify-content-end">
+                        <button class="btn btn-outline-primary rounded-0 me-1" @onclick="@(() => OnClick.InvokeAsync(PageType.Edit))">Edit</button>
+                        <button class="btn btn-outline-danger rounded-0" @onclick="@(() => OnClick.InvokeAsync(PageType.Delete))">Delete</button>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@*}*@
+
+@code {
+    [Parameter] public bool IsAdmin { get; set; }
+    public string Alert { get; set; } = "";
+    public List<CourseDTO> Model { get; set; } = new();
+    [Parameter] public EventCallback<string> OnClick { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model = await AdminService.GetCourses();
+    }
+}

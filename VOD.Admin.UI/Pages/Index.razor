@@ -1,0 +1,49 @@
+﻿@page "/"
+@inject IAdminService AdminService
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
+
+<PageTitle>Portal</PageTitle>
+
+<h1>Welcome</h1>
+
+
+@*
+<h1>@title</h1>
+
+@if (Route.Equals(Routes.Courses))
+{
+    <CoursesIndex IsCustomer=@IsCustomer />
+}
+
+@if (Route.Equals(Routes.Sections))
+{
+    <SectionsIndex />
+}*@
+
+@code {
+    /*[Parameter] public string Route { get; set; } = "";
+    string title = "";
+    string message = "";
+
+    protected override void OnInitialized()
+    {
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        base.OnParametersSet();
+        if (Route == null) Route = "Courses";
+        title = $"{Route}";
+        message = $"How is Blazor working for you? {Route}";
+    }*/
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await AdminService.SetToken(); // Dev purposes only before implementing secrity
+        await AdminService.HasAdminRole();
+        await ProtectedSessionStore.SetAsync("IsAdmin", AdminService.IsAdmin);
+        var IsAdmin = (await ProtectedSessionStore.GetAsync<bool>("IsAdmin")).Value;
+    }
+
+}

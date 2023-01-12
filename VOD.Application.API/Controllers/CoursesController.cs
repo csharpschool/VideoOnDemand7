@@ -17,8 +17,10 @@ namespace VOD.Application.API.Controllers
         [HttpGet]
         public async Task<IResult> Get(bool freeOnly)
         {
+            /*** Implemented for Membership Pages ***/
             try
             {
+                _db.Include<Instructor>();
                 List<CourseDTO>? courses = freeOnly ?
                     await _db.GetAsync<Course, CourseDTO>(c => c.Free.Equals(freeOnly)) :
                     await _db.GetAsync<Course, CourseDTO>();
@@ -36,6 +38,7 @@ namespace VOD.Application.API.Controllers
         [HttpGet("{id}")]
         public async Task<IResult> Get(int id)
         {
+            /*** Implemented for Membership Pages ***/
             try
             {
                 _db.Include<Instructor>();

@@ -12,8 +12,8 @@ namespace VOD.Application.Common.Services;
 
 public class MembersipService : IMembersipService
 {
-    private readonly ApplicationHttpClient _http;
-    private readonly ILocalStorageService _localStorage;
+    protected readonly ApplicationHttpClient _http;
+    protected readonly ILocalStorageService _localStorage;
 
     public MembersipService(ApplicationHttpClient httpClient, ILocalStorageService localStorage)
     {

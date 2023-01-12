@@ -1,0 +1,39 @@
+﻿@page "/{Route}"
+@inject IAdminService AdminService
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
+
+<PageTitle>Portal</PageTitle>
+
+<h1>@title</h1>
+
+@if (Route.Equals(Routes.Courses))
+{
+    <CoursesPortal IsAdmin=@IsAdmin />
+}
+
+@if (Route.Equals(Routes.Sections))
+{
+    <SectionsIndex />
+    @*<SurveyPrompt Title="Sections Component" />*@
+}
+
+@code {
+    [Parameter] public string Route { get; set; } = "";
+    [Parameter] public bool IsAdmin { get; set; }
+    string title = "";
+    string message = "";
+
+    protected override void OnInitialized()
+    {
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        base.OnParametersSet();
+        if (Route == null) Route = "Courses";
+        title = $"{Route}";
+        message = $"How is Blazor working for you? {Route}";
+        IsAdmin = (await ProtectedSessionStore.GetAsync<bool>("IsAdmin")).Value;
+    }
+}

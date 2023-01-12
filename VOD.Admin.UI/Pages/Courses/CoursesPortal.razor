@@ -1,0 +1,49 @@
+﻿@inject IAdminService AdminService
+@*@inject SignInManager<VODUser> SignInManager*@
+
+@*@if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+{*@
+    @*<div class="row">
+        <div class="px-0">
+            <alert alert-type="success">@Alert</alert>
+        </div>
+    </div>*@
+
+
+    @if (navigation == PageType.Create)
+    {
+        <CreateCourse IsAdmin=@IsAdmin></CreateCourse>
+    }
+    @if (navigation == PageType.Delete)
+    {
+        <DeleteCourse IsAdmin=@IsAdmin></DeleteCourse>
+    }
+    @if (navigation == PageType.Edit)
+    {
+        <EditCourse IsAdmin=@IsAdmin></EditCourse>
+    }
+
+<div class="d-flex me-1">
+    <a href="/" class="btn btn-outline-secondary rounded-0 me-1">Home</a>
+    <button type="button" class="btn btn-outline-primary rounded-0 me-1" @onclick="()=>ChangePageType(PageType.Index)">Index</button>
+    <button type="button" class="btn btn-outline-success rounded-0" @onclick="()=>ChangePageType(PageType.Create)">Create</button>
+</div>
+<CoursesIndex IsAdmin=@IsAdmin OnClick="ClickHandler"></CoursesIndex>
+
+
+
+@*}*@
+
+@code {
+    [Parameter] public bool IsAdmin { get; set; }
+    string navigation = PageType.Index;
+
+    void ChangePageType(string pageType) => navigation = pageType;
+
+    void ClickHandler(string type)
+    {
+        ChangePageType(type);
+        StateHasChanged();
+    }
+
+}

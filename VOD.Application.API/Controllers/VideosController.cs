@@ -23,6 +23,7 @@ namespace VOD.Application.API.Controllers
         [HttpGet("{id}")]
         public async Task<IResult> Get(int id)
         {
+            /*** Implemented for Membership Pages ***/
             try
             {
                 var video = await _db.SingleAsync<Video, VideoDTO>(c => c.Id.Equals(id));
