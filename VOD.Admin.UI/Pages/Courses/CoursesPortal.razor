@@ -47,17 +47,14 @@
         Model = await AdminService.GetCourses();
     }
 
-    void CloseAlert()
-    {
-        Alert = "";
-    }
+    void CloseAlert() => Alert = "";
+    
 
     async Task OnClick(ClickModel model)
     {
         if (model.PageType.Equals(PageType.Edit) || model.PageType.Equals(PageType.Delete))
-        {
             Course = await AdminService.GetCourse(model.id);
-        }
+
         ChangePageType(model.PageType);
         StateHasChanged();
     }
