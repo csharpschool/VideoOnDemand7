@@ -3,29 +3,25 @@
 
 @*@if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
 {*@
-    @if(!string.IsNullOrEmpty(Alert))
-    {
-        <div class="d-flex">
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong>@Alert</strong>
-                <button type="button" @onclick="CloseAlert" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        </div>
-    }
 
-    @if (Navigation == PageType.Create)
-    {
-    <CreateEditCourse IsAdmin=@IsAdmin Page="@Navigation" Title="Create Course" OnChange="OnChange"></CreateEditCourse>
-    }
-    @if (Navigation == PageType.Delete)
-    {
-    @*<DeleteCourse IsAdmin=@IsAdmin></DeleteCourse>*@
-    <CreateEditCourse IsAdmin=@IsAdmin Page="@Navigation" Title="Delete Course" OnChange="OnChange" Model="Course"></CreateEditCourse>
-    }
-    @if (Navigation == PageType.Edit)
-    {
-    <CreateEditCourse IsAdmin=@IsAdmin Page="@Navigation" Title="Edit Course" OnChange="OnChange" Model="Course"></CreateEditCourse>
-    }
+@if(!string.IsNullOrEmpty(Alert))
+{
+    <div class="d-flex">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>@Alert</strong>
+            <button type="button" @onclick="CloseAlert" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+}
+
+@if (Navigation == PageType.Create)
+{
+    <ChangeCourse IsAdmin=@IsAdmin Page="@Navigation" OnChange="OnChange"></ChangeCourse>
+}
+@if (Navigation == PageType.Delete || Navigation == PageType.Edit)
+{
+    <ChangeCourse IsAdmin=@IsAdmin Page="@Navigation" OnChange="OnChange" Model="Course"></ChangeCourse>
+}
 
 <div class="d-flex me-1">
     <a href="/" class="btn btn-outline-secondary rounded-0 me-1">Home</a>
@@ -33,8 +29,6 @@
     <button type="button" class="btn btn-outline-success rounded-0" @onclick="()=>ChangePageType(PageType.Create)">Create</button>
 </div>
 <CoursesIndex IsAdmin=@IsAdmin OnClick="OnClick" Model="Model"></CoursesIndex>
-
-
 
 @*}*@
 

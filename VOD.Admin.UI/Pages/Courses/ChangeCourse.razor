@@ -3,7 +3,7 @@
 <div class="d-xl-flex justify-content-center">
 <EditForm Model="@Model" OnValidSubmit="@OnFormSubmit" class="mb-5 border border-1 border-secondary p-2 w-25">
     <DataAnnotationsValidator />
-        <h4>@Title</h4>
+    <h4>@Title</h4>
     <div class="mb-3">
         @if (Page.Equals(PageType.Delete))
         {
@@ -29,7 +29,7 @@
             <InputText id="marquee-image-url" class="form-control me-2" @bind-Value="Model.MarqueeImageUrl" placeholder="Marquee Image Url"></InputText>
             <ValidationMessage For="@(() => Model.MarqueeImageUrl)" />
         </div>
-        <div class="mb-3">
+        
             <InputSelect @bind-Value="Model.InstructorId" class="form-control mb-3">
                 <option value=0>Instructor ...</option>
                 @foreach (var instructor in Instructors)
@@ -37,7 +37,7 @@
                     <option value="@instructor.Id">@instructor.Name</option>
                 }
             </InputSelect>
-        </div>
+        
         <div class="mb-3">
             <label>
                 <InputCheckbox @bind-Value="Model.Free" />
@@ -58,6 +58,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        Title = $"{Page} Course";
         Instructors = await AdminService.GetInstructors();
     }
 
@@ -65,6 +66,7 @@
     {
         try
         {
+            Title = $"{Page} Course";
             if (Page.Equals(PageType.Create))
                 await AdminService.CreateCourse(Model);
             else if (Page.Equals(PageType.Edit))
