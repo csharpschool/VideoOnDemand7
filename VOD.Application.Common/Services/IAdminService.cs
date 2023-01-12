@@ -8,6 +8,8 @@ namespace VOD.Application.Common.Services
         bool IsAdmin { get; set; }
 
         Task CreateCourse(CourseDTO course);
+        Task EditCourse(CourseDTO course);
+        Task<CourseDTO> GetCourse(int id);
         Task<List<CourseDTO>> GetCourses();
         Task<List<InstructorDTO>> GetInstructors();
         Task<bool> HasAdminRole();

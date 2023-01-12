@@ -29,3 +29,11 @@ public class CourseCreateDTO
 
     public int InstructorId { get; set; }
 }
+
+public class CourseEditDTO : CourseCreateDTO
+{
+    public int Id { get; set; }
+}
+
+
+public record ClickModel(string PageType, int id);

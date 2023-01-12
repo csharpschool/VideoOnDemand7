@@ -15,7 +15,7 @@
 
     @if (navigation == PageType.Create)
     {
-    <CreateCourse IsAdmin=@IsAdmin OnCreate="OnCreate"></CreateCourse>
+    <CreateEditCourse IsAdmin=@IsAdmin Title="Create Course" OnChange="OnChange"></CreateEditCourse>
     }
     @if (navigation == PageType.Delete)
     {
@@ -23,7 +23,7 @@
     }
     @if (navigation == PageType.Edit)
     {
-        <EditCourse IsAdmin=@IsAdmin></EditCourse>
+    <CreateEditCourse IsAdmin=@IsAdmin Title="Edit Course" OnChange="OnChange" Model="Course"></CreateEditCourse>
     }
 
 <div class="d-flex me-1">
@@ -41,6 +41,7 @@
     [Parameter] public bool IsAdmin { get; set; }
     string navigation = PageType.Index;
     public List<CourseDTO> Model { get; set; } = new();
+    public CourseDTO Course { get; set; } = new();
     public string Alert { get; set; } = "";
 
     void ChangePageType(string pageType) => navigation = pageType;
@@ -56,13 +57,17 @@
         Alert = "";
     }
 
-    void OnClick(string type)
+    async Task OnClick(ClickModel model)
     {
-        ChangePageType(type);
+        if (model.PageType.Equals(PageType.Edit))
+        {
+            Course = await AdminService.GetCourse(model.id);
+        }
+        ChangePageType(model.PageType);
         StateHasChanged();
     }
 
-    async Task OnCreate(string alert)
+    async Task OnChange(string alert)
     {
         try
         {

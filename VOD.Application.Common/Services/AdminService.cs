@@ -19,6 +19,24 @@ public class AdminService : IAdminService
         _localStorage = localStorage;
     }
 
+    public async Task<CourseDTO> GetCourse(int id)
+    {
+        try
+        {
+            using HttpResponseMessage courseResponse = await _http.Client.GetAsync($"courses/{id}");
+            courseResponse.EnsureSuccessStatusCode();
+
+            var result = JsonSerializer.Deserialize<CourseDTO>(await courseResponse.Content.ReadAsStreamAsync(),
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return result ?? new CourseDTO();
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+
     public async Task<List<CourseDTO>> GetCourses()
     {
         try
@@ -36,6 +54,7 @@ public class AdminService : IAdminService
             throw;
         }
     }
+
     public async Task CreateCourse(CourseDTO course)
     {
         try
@@ -57,6 +76,26 @@ public class AdminService : IAdminService
         }
     }
 
+    public async Task EditCourse(CourseDTO course)
+    {
+        try
+        {
+            CourseEditDTO courseCreate = new() { Id = course.Id, Description = course.Description, Free = course.Free, ImageUrl = course.ImageUrl, InstructorId = course.InstructorId, MarqueeImageUrl = course.MarqueeImageUrl, Title = course.Title };
+
+            using StringContent jsonContent = new(
+                JsonSerializer.Serialize(courseCreate),
+                Encoding.UTF8,
+                "application/json");
+
+            using HttpResponseMessage response = await _http.Client.PutAsync($"courses/{course.Id}", jsonContent);
+
+            response.EnsureSuccessStatusCode();
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
 
     public async Task<List<InstructorDTO>> GetInstructors()
     {
