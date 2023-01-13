@@ -1,8 +1,4 @@
 ﻿@inject IAdminService AdminService
-@*@inject SignInManager<VODUser> SignInManager*@
-
-@*@if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-{*@
 
 @if(!string.IsNullOrEmpty(Alert))
 {
@@ -16,11 +12,11 @@
 
 @if (Navigation == PageType.Create)
 {
-    <ChangeCourse IsAdmin=@IsAdmin Page="@Navigation" OnChange="OnChange"></ChangeCourse>
+    <ChangeCourse Page="@Navigation" OnChange="OnChange"></ChangeCourse>
 }
 @if (Navigation == PageType.Delete || Navigation == PageType.Edit)
 {
-    <ChangeCourse IsAdmin=@IsAdmin Page="@Navigation" OnChange="OnChange" Model="Course"></ChangeCourse>
+    <ChangeCourse Page="@Navigation" OnChange="OnChange" Model="Course"></ChangeCourse>
 }
 
 <div class="d-flex me-1">
@@ -28,12 +24,9 @@
     <button type="button" class="btn btn-outline-primary rounded-0 me-1" @onclick="()=>ChangePageType(PageType.Index)">Index</button>
     <button type="button" class="btn btn-outline-success rounded-0" @onclick="()=>ChangePageType(PageType.Create)">Create</button>
 </div>
-<CoursesIndex IsAdmin=@IsAdmin OnClick="OnClick" Model="Model"></CoursesIndex>
-
-@*}*@
+<CoursesIndex OnClick="OnClick" Model="Model"></CoursesIndex>
 
 @code {
-    [Parameter] public bool IsAdmin { get; set; }
     string Navigation { get; set; } = PageType.Index;
     public List<CourseDTO> Model { get; set; } = new();
     public CourseDTO Course { get; set; } = new();

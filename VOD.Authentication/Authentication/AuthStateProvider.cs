@@ -1,6 +1,4 @@
-﻿using VOD.Authentication.HttpClients;
-
-namespace VOD.Authentication;
+﻿namespace VOD.Authentication;
 
 public class AuthStateProvider : AuthenticationStateProvider
 {

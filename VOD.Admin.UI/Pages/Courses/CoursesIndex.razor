@@ -1,15 +1,4 @@
 ﻿@inject IAdminService AdminService
-@*@inject SignInManager<VODUser> SignInManager*@
-
-@*@if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-{*@
-    @*<div class="row">
-        <div class="px-0">
-            <alert alert-type="success">@Alert</alert>
-        </div>
-    </div>*@
-
-@*<partial name="_PageButtonsPartial" />*@
 <table class="table mt-2">
     <thead>
         <tr>
@@ -25,7 +14,7 @@
         {
             <tr>
                 <td>@item.Title</td>
-                <td>@item.Free</td>
+                <td>@(item.Free ? "Free": "")</td>
                 <td>@item.Instructor.Name</td>
                 <td>@item.Description.Truncate(50)</td>
                 <td>
@@ -38,15 +27,8 @@
         }
     </tbody>
 </table>
-@*}*@
 
 @code {
-    [Parameter] public bool IsAdmin { get; set; }
     [Parameter] public List<CourseDTO> Model { get; set; } = new();
     [Parameter] public EventCallback<ClickModel> OnClick { get; set; }
-   
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    Model = await AdminService.GetCourses();
-    //}
 }

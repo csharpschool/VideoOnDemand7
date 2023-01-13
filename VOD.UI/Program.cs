@@ -1,11 +1,3 @@
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using System;
-using System.Security.Claims;
-using VOD.Application.Common.Services;
-using VOD.Authentication.HttpClients;
-using VOD.UI.Extensions;
-
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");

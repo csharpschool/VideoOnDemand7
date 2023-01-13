@@ -1,11 +1,4 @@
-﻿using VOD.Authentication.Classes;
-using VOD.Authentication;
-using System.Text.Json;
-using VOD.Application.Common.DTOs;
-using System.Net.Http.Json;
-using System.Text;
-
-namespace VOD.Application.Common.Services;
+﻿namespace VOD.Application.Common.Services;
 
 public class AdminService : IAdminService
 {

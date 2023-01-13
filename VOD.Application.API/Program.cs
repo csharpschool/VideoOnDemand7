@@ -66,7 +66,15 @@ void ConfigureAutoMapper(IServiceCollection services)
         cfg.CreateMap<Course, CourseDTO>()
             //.ForMember(dest => dest.Instructor, src => src.MapFrom(s => s.Instructor.Name))
             .ReverseMap();
-            //.ForMember(dest => dest.Instructor , src => src.Ignore());
+        //.ForMember(dest => dest.Instructor , src => src.Ignore());
+
+        cfg.CreateMap<CourseEditDTO, Course>()
+            .ForMember(dest => dest.Instructor , src => src.Ignore())
+            .ForMember(dest => dest.Sections, src => src.Ignore());
+
+        cfg.CreateMap<CourseCreateDTO, Course>()
+            .ForMember(dest => dest.Instructor, src => src.Ignore())
+            .ForMember(dest => dest.Sections, src => src.Ignore());
 
         cfg.CreateMap<Section, SectionDTO>()
             .ForMember(dest => dest.Course, src => src.MapFrom(s => s.Course.Title))

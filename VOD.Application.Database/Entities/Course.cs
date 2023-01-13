@@ -17,8 +17,8 @@ public class Course : IEntity
     public bool Free { get; set; }
 
     public int InstructorId { get; set; }
-    [JsonIgnore, NotMapped]
+    /*[JsonIgnore, NotMapped]*/
     public virtual Instructor Instructor { get; set; }
-    [JsonIgnore, NotMapped]
+    /*[JsonIgnore, NotMapped]*/
     public virtual ICollection<Section> Sections { get; set; }
 }

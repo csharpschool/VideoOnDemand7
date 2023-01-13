@@ -1,14 +1,4 @@
-﻿using System.Net.Http.Json;
-using System.Text.Json;
-using System.Text;
-using VOD.Application.Common.DTOs;
-using Microsoft.AspNetCore.Components.Authorization;
-using VOD.Authentication.Classes;
-using VOD.Authentication;
-using Blazored.LocalStorage;
-using VOD.Authentication.DTOs;
-
-namespace VOD.Application.Common.Services;
+﻿namespace VOD.Application.Common.Services;
 
 public class MembersipService : IMembersipService
 {

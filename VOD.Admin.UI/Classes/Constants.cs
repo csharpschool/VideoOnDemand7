@@ -1,4 +1,6 @@
-﻿namespace VOD.Admin.UI;
+﻿using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+
+namespace VOD.Admin.UI;
 
 public static class Routes
 {
@@ -6,6 +8,7 @@ public static class Routes
     public static string Videos => "Videos";
     public static string Instructors => "Instructors";
     public static string Sections => "Sections";
+    public static string Register => "Register";
 }
 
 public static class PageType
@@ -15,3 +18,4 @@ public static class PageType
     public static string Edit => "Edit";
     public static string Delete => "Delete";
 }
+

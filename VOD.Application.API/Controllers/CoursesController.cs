@@ -63,9 +63,9 @@ namespace VOD.Application.API.Controllers
             {
                 if (dto == null) return Results.BadRequest();
 
-                CourseDTO courseDTO = new CourseDTO { Description = dto.Description, Free = dto.Free, ImageUrl = dto.ImageUrl, InstructorId = dto.InstructorId, MarqueeImageUrl = dto.MarqueeImageUrl, Title = dto.Title };
+                //CourseDTO courseDTO = new CourseDTO { Description = dto.Description, Free = dto.Free, ImageUrl = dto.ImageUrl, InstructorId = dto.InstructorId, MarqueeImageUrl = dto.MarqueeImageUrl, Title = dto.Title };
 
-                var course = await _db.AddAsync<Course, CourseDTO>(courseDTO);
+                var course = await _db.AddAsync<Course, CourseCreateDTO>(dto);
 
                 var success = await _db.SaveChangesAsync();
 
@@ -95,9 +95,7 @@ namespace VOD.Application.API.Controllers
                 exists = await _db.AnyAsync<Course>(c => c.Id.Equals(id));
                 if (!exists) return Results.NotFound("Could not find entity");
 
-                CourseDTO courseDTO = new CourseDTO { Id = dto.Id, Description = dto.Description, Free = dto.Free, ImageUrl = dto.ImageUrl, InstructorId = dto.InstructorId, MarqueeImageUrl = dto.MarqueeImageUrl, Title = dto.Title };
-
-                _db.Update<Course, CourseDTO>(dto.Id, courseDTO);
+                _db.Update<Course, CourseEditDTO>(dto.Id, dto);
 
                 var success = await _db.SaveChangesAsync();
 

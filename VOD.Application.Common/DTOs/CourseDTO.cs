@@ -13,9 +13,9 @@ public class CourseDTO
     public bool Free { get; set; }
 
     public int InstructorId { get; set; }
-    [JsonIgnore, NotMapped]
+    /*[JsonIgnore, NotMapped]*/
     public InstructorDTO Instructor { get; set; } = new();
-    [JsonIgnore, NotMapped]
+    /*[JsonIgnore, NotMapped]*/
     public List<SectionDTO> Sections { get; set; } = new();
 }
 

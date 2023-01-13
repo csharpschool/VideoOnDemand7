@@ -1,4 +1,11 @@
-﻿<h3>Sections Index</h3>
+﻿<AuthorizeView Policy="@UserRole.Admin">
+    <Authorized>
+        <h3>Sections Index</h3>
+    </Authorized>
+    <NotAuthorized>
+        <h4>You're not authorized to view this page</h4>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
 

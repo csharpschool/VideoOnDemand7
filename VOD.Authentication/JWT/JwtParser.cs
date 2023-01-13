@@ -1,6 +1,4 @@
-﻿using System.Data;
-
-namespace VOD.Authentication;
+﻿namespace VOD.Authentication.JWT;
 
 public class JwtParser
 {
@@ -25,8 +23,8 @@ public class JwtParser
         if (roles is null) return;
 
         var parsedRoles = roles.ToString().Trim().TrimStart('[').TrimEnd(']').Split(',');
-        
-        if(parsedRoles.Length == 0) claims.Add(new Claim(ClaimTypes.Role, parsedRoles[0])); ;
+
+        if (parsedRoles.Length == 0) claims.Add(new Claim(ClaimTypes.Role, parsedRoles[0])); ;
 
         foreach (var parsedRole in parsedRoles)
             claims.Add(new Claim(ClaimTypes.Role, parsedRole.Trim('"')));
@@ -37,6 +35,7 @@ public class JwtParser
     public static IEnumerable<Claim> ParseClaimsFromJWT(string jwt)
     {
         var claims = new List<Claim>();
+        if (string.IsNullOrWhiteSpace(jwt)) return claims;
         var payload = jwt.Split('.')[1];
         var jsonBytes = ParseBase64WithoutPadding(payload);
         var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
@@ -75,7 +74,7 @@ public class JwtParser
         {
             if (string.IsNullOrWhiteSpace(jwt)) return false;
 
-            List<Claim>? claims = ParseUserInfoFromJWT(jwt)?.Roles ;
+            List<Claim>? claims = ParseUserInfoFromJWT(jwt)?.Roles;
 
             if (claims is null || claims.Count.Equals(0)) return false;
 

@@ -1,25 +1,36 @@
 ﻿@page "/{Route}"
 @inject IAdminService AdminService
-@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
-@inject ProtectedSessionStorage ProtectedSessionStore
+@*@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore*@
 
 <PageTitle>Portal</PageTitle>
 
-<h1>@title</h1>
+<AuthorizeView Policy="@UserRole.Admin">
+    <Authorized>
+        <h1>@title</h1>
 
-@if (Route.Equals(Routes.Courses))
-{
-    <CoursesPortal IsAdmin=@IsAdmin />
-}
+        @if (Route.Equals(Routes.Courses))
+        {
+            <CoursesPortal />
+        }
 
-@if (Route.Equals(Routes.Sections))
-{
-    <SectionsIndex />
-}
+        @if (Route.Equals(Routes.Sections))
+        {
+            <SectionsIndex />
+        }
+
+        @if (Route.Equals(Routes.Register))
+        {
+            <Register />
+        }
+    </Authorized>
+    <NotAuthorized>
+        <h4>You're not authorized to view this page</h4>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     [Parameter] public string Route { get; set; } = "";
-    [Parameter] public bool IsAdmin { get; set; }
     string title = "";
     string message = "";
 
@@ -33,6 +44,5 @@
         if (Route == null) Route = "Courses";
         title = $"{Route}";
         message = $"How is Blazor working for you? {Route}";
-        IsAdmin = (await ProtectedSessionStore.GetAsync<bool>("IsAdmin")).Value;
     }
 }

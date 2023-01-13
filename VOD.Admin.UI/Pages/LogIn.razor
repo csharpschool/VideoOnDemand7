@@ -1,0 +1,33 @@
+﻿@inject IAuthenticationService AuthService
+@inject NavigationManager NavManager
+
+<EditForm Model="model" OnValidSubmit="Login">
+    <div class="d-flex">
+        <InputText id="email" class="form-control me-2" @bind-Value="model.Email" placeholder="Email"></InputText>
+        <InputText id="password" type="password" class="form-control me-2" @bind-Value="model.Password" placeholder="Password"></InputText>
+        <button type="submit" class="btn btn-success me-2">Login</button>
+    </div>
+</EditForm>
+<EditForm Model="model" OnValidSubmit="RegisterUser">
+    <div class="d-flex">
+        <button type="submit" class="btn btn-primary">Register</button>
+    </div>
+</EditForm>
+@code {
+    private AuthenticationUserModel model = new();
+    string authError = string.Empty;
+
+    private async Task Login()
+    {
+        var result = await AuthService.Login(model);
+
+        if (result is not null)
+            NavManager.NavigateTo("/");
+        //else
+            //errorMessage = "Registration succeeded, but there was an error login in.";
+    }
+    private void RegisterUser()
+    {
+        NavManager.NavigateTo("/Register");
+    }
+}
