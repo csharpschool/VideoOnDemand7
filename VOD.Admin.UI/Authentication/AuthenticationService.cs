@@ -70,13 +70,4 @@ public class AuthenticationService : IAuthenticationService
         ((ServerAuthStateProvider)_authStateProvider).NotifyUserLogout();
         _http.Client.DefaultRequestHeaders.Authorization = null;
     }
-
-    public async Task<TokenUserDTO?> GetUserFromToken()
-    {
-        var token = await _sessionStorage.GetAsync("authToken");
-
-        if (string.IsNullOrWhiteSpace(token)) return default;
-
-        return JwtParser.ParseUserInfoFromJWT(token);
-    }
 }
