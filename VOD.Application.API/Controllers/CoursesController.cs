@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VOD.Application.Common.DTOs;
+using VOD.Authentication.Classes;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,10 +14,9 @@ namespace VOD.Application.API.Controllers
         private readonly IDbService _db;
 
         public CoursesController(IDbService db) => _db = db;
-        
 
-        // GET: api/<CoursesController>
         [HttpGet]
+        [Authorize(Policy = "Registered")]
         public async Task<IResult> Get(bool freeOnly)
         {
             /*** Implemented for Membership Pages ***/
@@ -35,8 +36,8 @@ namespace VOD.Application.API.Controllers
             return Results.NotFound();
         }
 
-        // GET api/<CoursesController>/5
         [HttpGet("{id}")]
+        [Authorize(Policy = "Registered")]
         public async Task<IResult> Get(int id)
         {
             /*** Implemented for Membership Pages ***/
@@ -55,15 +56,13 @@ namespace VOD.Application.API.Controllers
             return Results.NotFound();
         }
 
-        // POST api/<CoursesController>
         [HttpPost]
+        [Authorize(Policy = "Admin")]
         public async Task<IResult> Post([FromBody] CourseCreateDTO dto)
         {
             try
             {
                 if (dto == null) return Results.BadRequest();
-
-                //CourseDTO courseDTO = new CourseDTO { Description = dto.Description, Free = dto.Free, ImageUrl = dto.ImageUrl, InstructorId = dto.InstructorId, MarqueeImageUrl = dto.MarqueeImageUrl, Title = dto.Title };
 
                 var course = await _db.AddAsync<Course, CourseCreateDTO>(dto);
 
@@ -80,8 +79,8 @@ namespace VOD.Application.API.Controllers
             return Results.BadRequest();
         }
 
-        // PUT api/<CoursesController>/5
         [HttpPut("{id}")]
+        [Authorize(Policy = "Admin")]
         public async Task<IResult> Put(int id, [FromBody] CourseEditDTO dto)
         {
             try
@@ -111,8 +110,8 @@ namespace VOD.Application.API.Controllers
 
         }
 
-        // DELETE api/<CoursesController>/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = "Admin")]
         public async Task<IResult> Delete(int id)
         {
             try

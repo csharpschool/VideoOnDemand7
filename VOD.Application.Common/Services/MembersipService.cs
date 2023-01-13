@@ -1,4 +1,7 @@
-﻿namespace VOD.Application.Common.Services;
+﻿using System.Net.Http;
+using static System.Net.WebRequestMethods;
+
+namespace VOD.Application.Common.Services;
 
 public class MembersipService : IMembersipService
 {
@@ -19,6 +22,7 @@ public class MembersipService : IMembersipService
 
             bool freeOnly = JwtParser.ParseIsNotInRoleFromJWT(token, UserRole.Customer);
 
+            _http.AddBearerToken(token);
             using HttpResponseMessage courseResponse = await _http.Client.GetAsync($"courses?freeOnly={freeOnly}");
             courseResponse.EnsureSuccessStatusCode();
            
@@ -27,9 +31,9 @@ public class MembersipService : IMembersipService
 
             return result ?? new List<CourseDTO>();
         }
-        catch (Exception ex)
+        catch
         {
-            throw;
+            return new List<CourseDTO>();
         }
     }
 
@@ -37,8 +41,12 @@ public class MembersipService : IMembersipService
     {
         try
         {
+            
             if(courseId is null) return new CourseDTO();
 
+            var token = await _localStorage.GetItemAsync<string>("authToken");
+
+            _http.AddBearerToken(token);
             using HttpResponseMessage courseResponse = await _http.Client.GetAsync($"courses/{courseId}");
             courseResponse.EnsureSuccessStatusCode();
 
@@ -49,7 +57,7 @@ public class MembersipService : IMembersipService
         }
         catch (Exception ex)
         {
-            throw;
+            return new CourseDTO();
         }
     }
 
@@ -59,6 +67,9 @@ public class MembersipService : IMembersipService
         {
             if (videoId is null) return new VideoDTO();
 
+            var token = await _localStorage.GetItemAsync<string>("authToken");
+
+            _http.AddBearerToken(token);
             using HttpResponseMessage courseResponse = await _http.Client.GetAsync($"videos/{videoId}");
             courseResponse.EnsureSuccessStatusCode();
 
@@ -69,7 +80,7 @@ public class MembersipService : IMembersipService
         }
         catch (Exception ex)
         {
-            throw;
+            return new VideoDTO();
         }
     }
 

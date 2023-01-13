@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,6 +22,7 @@ namespace VOD.Application.API.Controllers
 
         // GET api/<VideosController>/5
         [HttpGet("{id}")]
+        [Authorize(Policy = "Registered")]
         public async Task<IResult> Get(int id)
         {
             /*** Implemented for Membership Pages ***/

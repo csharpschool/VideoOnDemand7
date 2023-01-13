@@ -20,7 +20,7 @@ builder.Services.AddAuthorizationCore(options =>
     options.AddPolicy(UserPolicy.Customer, policy => policy.RequireRole(UserRole.Customer));
     options.AddPolicy(UserPolicy.Admin, policy => policy.RequireRole(UserRole.Admin));
 });
-builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider, WasmAuthStateProvider>();
 builder.Services.AddScoped<IMembersipService, MembersipService>();
 
 

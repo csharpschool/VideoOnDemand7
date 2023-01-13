@@ -1,4 +1,6 @@
-﻿namespace VOD.Application.HttpClients;
+﻿using static System.Net.WebRequestMethods;
+
+namespace VOD.Application.HttpClients;
 
 public class ApplicationHttpClient
 {
@@ -7,5 +9,11 @@ public class ApplicationHttpClient
     public ApplicationHttpClient(HttpClient httpClient)
     {
         Client = httpClient;
+    }
+
+    public void AddBearerToken(string token)
+    {
+        Client.DefaultRequestHeaders.Remove("Authorization");
+        Client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
     }
 }

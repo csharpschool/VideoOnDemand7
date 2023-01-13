@@ -52,7 +52,7 @@ public class AuthenticationService : IAuthenticationService
 
             await _localStorage.SetItemAsync("authToken", result.AccessToken);
 
-            ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(result.AccessToken);
+            ((WasmAuthStateProvider)_authStateProvider).NotifyUserAuthentication(result.AccessToken);
 
             _http.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", result.AccessToken);
 
@@ -67,7 +67,7 @@ public class AuthenticationService : IAuthenticationService
     public async Task Logout()
     {
         await _localStorage.RemoveItemAsync("authToken");
-        ((AuthStateProvider)_authStateProvider).NotifyUserLogout();
+        ((WasmAuthStateProvider)_authStateProvider).NotifyUserLogout();
         _http.Client.DefaultRequestHeaders.Authorization = null;
     }
 

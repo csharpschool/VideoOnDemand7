@@ -16,6 +16,9 @@ public class AdminService : IAdminService
     {
         try
         {
+            var token = await _localStorage.GetItemAsync<string>("authToken");
+            _http.AddBearerToken(token);
+
             using HttpResponseMessage courseResponse = await _http.Client.GetAsync($"courses/{id}");
             courseResponse.EnsureSuccessStatusCode();
 
@@ -34,6 +37,8 @@ public class AdminService : IAdminService
     {
         try
         {
+            var token = await _localStorage.GetItemAsync<string>("authToken");
+            _http.AddBearerToken(token);
             using HttpResponseMessage courseResponse = await _http.Client.GetAsync($"courses?freeOnly=false");
             courseResponse.EnsureSuccessStatusCode();
 
@@ -59,6 +64,8 @@ public class AdminService : IAdminService
                 Encoding.UTF8,
                 "application/json");
 
+            var token = await _localStorage.GetItemAsync<string>("authToken");
+            _http.AddBearerToken(token);
             using HttpResponseMessage response = await _http.Client.PostAsync("courses", jsonContent);
 
             response.EnsureSuccessStatusCode();
@@ -80,6 +87,8 @@ public class AdminService : IAdminService
                 Encoding.UTF8,
                 "application/json");
 
+            var token = await _localStorage.GetItemAsync<string>("authToken");
+            _http.AddBearerToken(token);
             using HttpResponseMessage response = await _http.Client.PutAsync($"courses/{course.Id}", jsonContent);
 
             response.EnsureSuccessStatusCode();
@@ -94,6 +103,8 @@ public class AdminService : IAdminService
     {
         try
         {
+            var token = await _localStorage.GetItemAsync<string>("authToken");
+            _http.AddBearerToken(token);
             using HttpResponseMessage response = await _http.Client.DeleteAsync($"courses/{id}");
 
             response.EnsureSuccessStatusCode();

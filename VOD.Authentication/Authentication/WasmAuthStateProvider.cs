@@ -1,12 +1,12 @@
 ﻿namespace VOD.Authentication;
 
-public class AuthStateProvider : AuthenticationStateProvider
+public class WasmAuthStateProvider : AuthenticationStateProvider
 {
     private readonly AuthenticationHttpClient _http;
     private readonly ILocalStorageService _localStorage;
     private readonly AuthenticationState _anonymous;
 
-    public AuthStateProvider(AuthenticationHttpClient httpClient, ILocalStorageService localStorage)
+    public WasmAuthStateProvider(AuthenticationHttpClient httpClient, ILocalStorageService localStorage)
     {
         _http = httpClient;
         _localStorage = localStorage;
